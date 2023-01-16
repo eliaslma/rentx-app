@@ -59,5 +59,15 @@ export const DateValue = styled.Text`
     height: ${RFValue(18)}px;
 `;
 
-export const Content = styled.View``;
-export const Footer = styled.View``;
+export const Content = styled.ScrollView.attrs({
+    showsVerticalScrollIndicator: false
+})`
+    flex: 1;
+    padding: 10px;
+`;
+
+export const Footer = styled.View`
+    background-color: ${({theme }) => theme.colors.background_primary};
+    padding: 24px;
+    width: 100%;
+`;

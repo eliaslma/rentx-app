@@ -2,8 +2,10 @@ import React from 'react';
 import Arrow from '../../assets/arrow.svg'
 import { StatusBar } from 'expo-status-bar';
 import { useTheme } from 'styled-components';
+import { Calendar } from '@myapp/components/Calendar';
 import { BackButton } from '@myapp/components/BackButton';
-import { getStatusBarHeight, isIphoneX } from 'react-native-iphone-x-helper';
+import { DefaultButton } from '@myapp/components/DefaultButton';
+import { getStatusBarHeight, isIphoneX, getBottomSpace } from 'react-native-iphone-x-helper';
 
 import {
     Container,
@@ -24,7 +26,7 @@ export function Scheduling(){
 
     return(
         <Container>
-            <StatusBar style='light' translucent={false}/>
+            <StatusBar style='light' translucent={false} backgroundColor={theme.colors.header}/>
             <Header style={isIphoneX() && {paddingTop: getStatusBarHeight()}}>
                 <HeaderContent>
                     <BackButton color={theme.colors.background_secondary} onPress={() => { console.log('botão clicado')}}/>
@@ -46,12 +48,11 @@ export function Scheduling(){
                     </ChooseDate>
                 </HeaderContent>
             </Header>
-            
             <Content>
-
+                <Calendar/>
             </Content>
-            <Footer>
-
+            <Footer style={isIphoneX() && {paddingBottom: getBottomSpace()}}>
+                <DefaultButton title="Confirmar" color={theme.colors.main}/>
             </Footer>
         </Container>
     );
