@@ -8,22 +8,21 @@ export const Container = styled(GestureHandlerRootView)`
 `;
 
 export const Header = styled.View`
-    width: 100%;
-    
+    width: 100%;  
 `;
 
 export const HeaderContent = styled.View`
     flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
     padding: 30px 24px 0px;
 `;
 
 export const Content = styled.ScrollView.attrs({
-    showsVerticalScrollIndicator: false
+    showsVerticalScrollIndicator: false,
+    contentContainerStyle: {
+        padding: 24
+    }
 })`
     flex: 1;
-    padding: 24px;
 `;
 export const Description = styled.View`
     flex-direction: row;

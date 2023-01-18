@@ -1,10 +1,14 @@
 import React from 'react';
 import { useFonts } from 'expo-font';
-import { Home } from '@myapp/screens/Home';
+import 'react-native-gesture-handler';
+import { Routes } from '@myapp/routes';
+
 import theme from '@myapp/global/styles/theme';
 import { ActivityIndicator } from 'react-native';
 import { ThemeProvider } from 'styled-components';
 import { LoadContainer } from '@myapp/screens/Home/styles';
+import 'react-native-gesture-handler';
+
 
 import {
     Inter_400Regular,
@@ -38,7 +42,7 @@ export default function App(){
 
     return (
         <ThemeProvider theme={theme}>
-            <Home/>
+            <Routes/>
         </ThemeProvider>
     );
 }
