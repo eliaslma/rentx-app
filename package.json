@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "server": "json-server ./src/services/server.json --host 192.168.163.36 --port 3301 --delay 1500",
     "start": "expo start --dev-client",
     "android": "expo run:android",
     "ios": "expo run:ios",
@@ -13,6 +14,7 @@
     "@expo-google-fonts/inter": "^0.2.2",
     "@react-navigation/native": "^6.1.2",
     "@react-navigation/native-stack": "^6.9.8",
+    "axios": "^1.2.3",
     "date-fns": "^2.29.3",
     "expo": "~47.0.12",
     "expo-font": "~11.0.1",
