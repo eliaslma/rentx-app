@@ -1,41 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTheme } from 'styled-components';
 import { Feather } from '@expo/vector-icons'
-import { RFValue } from 'react-native-responsive-fontsize';
 import { Calendar as CustomCalendar, LocaleConfig } from 'react-native-calendars';
+import { ptBR } from './localeConfig';
 
-LocaleConfig.locales['pt-BR'] = {
-    monthNames: [
-      'Janeiro',
-      'Fevereiro',
-      'Março',
-      'Abril',
-      'Maio',
-      'Junho',
-      'Julho',
-      'Agosto',
-      'Setembro',
-      'Outubro',
-      'Novembro',
-      'Dezembro'
-    ],
-    monthNamesShort: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dec'],
-    dayNames: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
-    dayNamesShort: ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB'],
-};
-
+LocaleConfig.locales['pt-BR'] = ptBR
 LocaleConfig.defaultLocale = 'pt-BR';
 
-export function Calendar(){
+export interface MarkedDateProps{
+    [date:  string] : {
+        color: string;
+        textColor: string;
+        disabled?: boolean;
+        disableTouchEvent?: boolean;
+    } 
+}
+
+interface CalendarProps {
+    markedDates: MarkedDateProps;
+    onDayPress: Function;
+
+}
+
+export function Calendar({ onDayPress, markedDates } : CalendarProps){
 
     const theme = useTheme()
-
+        
     return(
         <CustomCalendar
             style={{marginBottom: 16}}
             renderArrow={( direction) => 
                 <Feather 
-                    size={RFValue(24)}
+                    size={24}
                     color={theme.colors.text}
                     name={direction == 'left' ? 'chevron-left' : 'chevron-right' }
                 />
@@ -48,9 +44,15 @@ export function Calendar(){
                 textDayHeaderFontSize: 10,
                 textDayFontFamily: theme.fonts.inter_regular,
                 textDayFontSize: 15,
+                selectedDayBackgroundColor: 'red',
             }}
             firstDay={1}
-            minDate={String(new Date())}
+            minDate={new Date().toDateString()}
+            markingType={'period'}
+            onDayPress={day => {
+                onDayPress(day)
+            }}
+            markedDates={markedDates}
         />
     );
 }
