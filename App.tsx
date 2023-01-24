@@ -3,10 +3,9 @@ import { useFonts } from 'expo-font';
 import 'react-native-gesture-handler';
 import { Routes } from '@myapp/routes';
 
+import { Loader } from '@myapp/components/Loader';
 import theme from '@myapp/global/styles/theme';
-import { ActivityIndicator } from 'react-native';
 import { ThemeProvider } from 'styled-components';
-import { LoadContainer } from '@myapp/screens/Home/styles';
 import 'react-native-gesture-handler';
 
 
@@ -34,9 +33,7 @@ export default function App(){
 
     if(!fontsLoaded){
         return (
-            <LoadContainer>
-                <ActivityIndicator color="black" size="large"/>
-            </LoadContainer>
+            <Loader/>
         )
     }
 
