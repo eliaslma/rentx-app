@@ -28,8 +28,10 @@ import {
 } from './styles';
 
 interface RentalPeriod{
-    startDate: string;
-    endDate: string;
+    startDate: number;
+    startDateFormatted: string;
+    endDate: number;
+    endDateFormatted: string;
 }
 
 interface Params {
@@ -44,9 +46,8 @@ export function Scheduling({navigation}){
     const [rentalPeriod, setRentalPeriod] = useState<RentalPeriod>({} as RentalPeriod)
 
     const route = useRoute();
-    const { car } = route.params as Params
-
     const theme = useTheme();
+    const { car } = route.params as Params
 
     function handleConfirmPeriod(){
 
@@ -54,10 +55,15 @@ export function Scheduling({navigation}){
             Alert.alert('Selecione o período desejado')
         }
 
-        if(rentalPeriod.startDate && rentalPeriod.startDate != rentalPeriod.endDate ) {
+        if(rentalPeriod.startDate && rentalPeriod.startDate === rentalPeriod.endDate){
+            Alert.alert('Selecione a data final')
+        }
+
+        if(rentalPeriod.startDate != rentalPeriod.endDate ) {
             navigation.navigate('SchedulingDetails', {
                 car,
-                dates: Object.keys(markedDates)
+                rentalPeriod,
+                markedDates: Object.keys(markedDates)
             })
         }
 
@@ -75,8 +81,10 @@ export function Scheduling({navigation}){
         setMarkedDates(interval)
 
         const Period = {
-            startDate: format(getPlatformDate( new Date(start.timestamp)),'dd/MM/yyyy'),
-            endDate: format(getPlatformDate( new Date(end.timestamp)),'dd/MM/yyyy'),
+            startDate: start.timestamp,
+            startDateFormatted: format(getPlatformDate( new Date(start.timestamp)),'dd/MM/yyyy'),
+            endDate: end.timestamp,
+            endDateFormatted: format(getPlatformDate( new Date(end.timestamp)),'dd/MM/yyyy'),
         }
 
         setRentalPeriod(Period)
@@ -97,12 +105,12 @@ export function Scheduling({navigation}){
                     <ChooseDate>
                         <DateInfo selected={!!rentalPeriod.startDate}>
                             <DateTitle>DE</DateTitle>
-                            <DateValue>{rentalPeriod.startDate}</DateValue>
+                            <DateValue>{rentalPeriod.startDateFormatted}</DateValue>
                         </DateInfo>
                         <Arrow/>
                         <DateInfo selected={!!rentalPeriod.endDate}>
                             <DateTitle>ATÉ</DateTitle>
-                            <DateValue>{rentalPeriod.endDate}</DateValue>
+                            <DateValue>{rentalPeriod.endDateFormatted}</DateValue>
                         </DateInfo>
                     </ChooseDate>
                 </HeaderContent>
@@ -111,7 +119,7 @@ export function Scheduling({navigation}){
                 <Calendar onDayPress={handleChangeDate} markedDates={markedDates}/>
             </Content>
             <Footer style={isIphoneX() && {paddingBottom: getBottomSpace()}}>
-                <DefaultButton title="Confirmar" color={!rentalPeriod.startDate && theme.colors.disabled_button}onPress={handleConfirmPeriod}/>
+                <DefaultButton title="Confirmar" color={!rentalPeriod.startDate && theme.colors.disabled_button} onPress={handleConfirmPeriod}/>
             </Footer>
         </Container>
     );
