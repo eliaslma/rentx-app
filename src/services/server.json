@@ -9,8 +9,8 @@
           "period": "Ao dia",
           "price": 120
         },
-        "fuel_type": "electric",
-        "thumbnail": "https://storage.googleapis.com/golden-wind/ignite/react-native/thumbnails/1.png",
+        "fuel_type": "electric_motor",
+        "thumbnail": "https://storage.googleapis.com/golden-wind/ignite/react-native/images/1.png",
         "accessories": [
           {
             "type": "speed",
@@ -44,6 +44,48 @@
         ]
       },
       {
+        "id": "535e8de8-721b-4bac-8b72-7d29be6cb578",
+        "brand": "Nissan",
+        "name": "GT-R",
+        "about": "Impulsionado por turbos de alta capacidade desenvolvidos a partir do nosso programa de corrida GT3, o motor do GT-R NISMO é a mais pura expressão de paixão, desempenho e tecnologia.",
+        "rent": {
+          "period": "Ao dia",
+          "price": 320
+        },
+        "fuel_type": "gasoline_motor",
+        "thumbnail": "https://platform.cstatic-images.com/xlarge/in/v2/stock_photos/98c92485-aea1-46dc-b571-c8074b68f897/6a12fa0c-6b3d-4edd-b580-1bf666ae9c4d.png",
+        "accessories": [
+          {
+            "type": "speed",
+            "name": "340km/h"
+          },
+          {
+            "type": "acceleration",
+            "name": "2.3s"
+          },
+          {
+            "type": "turning_diameter",
+            "name": "1000 HP"
+          },
+          {
+            "type": "gasoline_motor",
+            "name": "Gasolina"
+          },
+          {
+            "type": "exchange",
+            "name": "Auto"
+          },
+          {
+            "type": "seats",
+            "name": "4 pessoas"
+          }
+        ],
+        "photos": [
+          "https://platform.cstatic-images.com/xlarge/in/v2/stock_photos/98c92485-aea1-46dc-b571-c8074b68f897/6a12fa0c-6b3d-4edd-b580-1bf666ae9c4d.png",
+          "https://www.cars.com/i/large/in/v2/stock_photos/98c92485-aea1-46dc-b571-c8074b68f897/1b8fd34f-d1af-4409-8550-fb5e861768e9.png"
+        ]
+      },
+      {
         "id": "ffb71f55-818a-48b1-b7d2-2efc406ede25",
         "brand": "Porsche",
         "name": "Panamera",
@@ -53,7 +95,7 @@
           "price": 340
         },
         "fuel_type": "gasoline_motor",
-        "thumbnail": "https://storage.googleapis.com/golden-wind/ignite/react-native/thumbnails/2.png",
+        "thumbnail": "https://storage.googleapis.com/golden-wind/ignite/react-native/images/4.png",
         "accessories": [
           {
             "type": "speed",
@@ -69,7 +111,7 @@
           },
           {
             "type": "gasoline_motor",
-            "name": "Gasoline"
+            "name": "Gasolina"
           },
           {
             "type": "exchange",
@@ -95,7 +137,7 @@
           "price": 620
         },
         "fuel_type": "gasoline_motor",
-        "thumbnail": "https://storage.googleapis.com/golden-wind/ignite/react-native/thumbnails/3.png",
+        "thumbnail": "https://storage.googleapis.com/golden-wind/ignite/react-native/images/6.png",
         "accessories": [
           {
             "type": "speed",
@@ -111,7 +153,7 @@
           },
           {
             "type": "gasoline_motor",
-            "name": "Gasoline"
+            "name": "Gasolina"
           },
           {
             "type": "exchange",
@@ -138,7 +180,7 @@
           "price": 120
         },
         "fuel_type": "electric_motor",
-        "thumbnail": "https://storage.googleapis.com/golden-wind/ignite/react-native/thumbnails/4.png",
+        "thumbnail": "https://storage.googleapis.com/golden-wind/ignite/react-native/images/9.png",
         "accessories": [
           {
             "type": "speed",
@@ -173,7 +215,7 @@
       },
       {
         "id": "508e7193-0078-4615-9071-920b59038fda",
-        "brand": "volvo",
+        "brand": "Volvo",
         "name": "XC40",
         "about": "A Poderosa Combinação de um Motor Elétrico de Alto Desempenho e um Motor a Combustão. Compacto e Inovador. Com Design Expressivo, Tecnologias Intuitivas e Estilo Urbano.",
         "rent": {
@@ -181,7 +223,7 @@
           "price": 120
         },
         "fuel_type": "gasoline_motor",
-        "thumbnail": "https://storage.googleapis.com/golden-wind/ignite/react-native/thumbnails/5.png",
+        "thumbnail": "https://storage.googleapis.com/golden-wind/ignite/react-native/images/12.png",
         "accessories": [
           {
             "type": "speed",
@@ -216,7 +258,7 @@
       },
       {
         "id": "59626707-88c5-4877-9350-07f372c0905a",
-        "brand": "mitsubishi",
+        "brand": "Mitsubishi",
         "name": "Lancer",
         "about": "Mitsubishi Lancer é um belo e agressivo carro. Além do mais, ele encanta pelo conforto e pela eficiência. Bastante firme e estável para dirigir com tranquilidade e segurança.",
         "rent": {
@@ -224,7 +266,7 @@
           "price": 220
         },
         "fuel_type": "hybrid_motor",
-        "thumbnail": "https://storage.googleapis.com/golden-wind/ignite/react-native/thumbnails/6.png",
+        "thumbnail": "https://storage.googleapis.com/golden-wind/ignite/react-native/images/17.png",
         "accessories": [
           {
             "type": "speed",
@@ -545,7 +587,7 @@
             },
             {
               "type": "gasoline_motor",
-              "name": "Gasoline"
+              "name": "Gasolina"
             },
             {
               "type": "exchange",
@@ -643,7 +685,7 @@
             },
             {
               "type": "gasoline_motor",
-              "name": "Gasoline"
+              "name": "Gasolina"
             },
             {
               "type": "exchange",
@@ -667,7 +709,7 @@
         "user_id": 1,
         "car": {
           "id": "59626707-88c5-4877-9350-07f372c0905a",
-          "brand": "mitsubishi",
+          "brand": "Mitsubishi",
           "name": "Lancer",
           "about": "Mitsubishi Lancer é um belo e agressivo carro. Além do mais, ele encanta pelo conforto e pela eficiência. Bastante firme e estável para dirigir com tranquilidade e segurança.",
           "rent": {
@@ -789,7 +831,7 @@
             },
             {
               "type": "gasoline_motor",
-              "name": "Gasoline"
+              "name": "Gasolina"
             },
             {
               "type": "exchange",
@@ -1132,7 +1174,7 @@
             },
             {
               "type": "gasoline_motor",
-              "name": "Gasoline"
+              "name": "Gasolina"
             },
             {
               "type": "exchange",
@@ -1180,7 +1222,7 @@
             },
             {
               "type": "gasoline_motor",
-              "name": "Gasoline"
+              "name": "Gasolina"
             },
             {
               "type": "exchange",
@@ -1229,7 +1271,7 @@
             },
             {
               "type": "gasoline_motor",
-              "name": "Gasoline"
+              "name": "Gasolina"
             },
             {
               "type": "exchange",
@@ -1425,7 +1467,7 @@
             },
             {
               "type": "gasoline_motor",
-              "name": "Gasoline"
+              "name": "Gasolina"
             },
             {
               "type": "exchange",
@@ -1450,7 +1492,7 @@
         "user_id": 1,
         "car": {
           "id": "508e7193-0078-4615-9071-920b59038fda",
-          "brand": "volvo",
+          "brand": "Volvo",
           "name": "XC40",
           "about": "A Poderosa Combinação de um Motor Elétrico de Alto Desempenho e um Motor a Combustão. Compacto e Inovador. Com Design Expressivo, Tecnologias Intuitivas e Estilo Urbano.",
           "rent": {

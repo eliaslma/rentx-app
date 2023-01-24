@@ -1,8 +1,10 @@
 import React from 'react';
 import { useTheme } from 'styled-components';
-import EnergyCar from '../../assets/energy.svg'
 import { RFValue } from 'react-native-responsive-fontsize';
+import { RectButtonProps } from 'react-native-gesture-handler';
 
+import { CarDTO } from '@myapp/dtos/CarDTO';
+import { SvgProps } from 'react-native-svg';
 import {
     Container,
     CarInfo,
@@ -18,26 +20,17 @@ import {
     Price,
 } from './styles';
 
-interface CardData{
-    brand: string,
-    name: string,
-    rent: {
-        period: string,
-        price: number,
-    },
-    thumbnail: string
+export interface CardProps extends RectButtonProps  {
+    data: CarDTO
+    icon: React.FC<SvgProps>
 }
 
-export interface CardProps {
-    data: CardData
-}
-
-export function CardCar({data} : CardProps){
+export function CardCar({data, icon: Icon, ...rest} : CardProps){
 
     const theme = useTheme();
 
     return (
-        <Container>
+        <Container {...rest}>
             <CarInfo>
                 <Detail>
                     <Model>
@@ -50,7 +43,7 @@ export function CardCar({data} : CardProps){
                             <Price>R$ {data.rent.price}</Price>
                         </Rent>
                         <Type>
-                            <EnergyCar width={RFValue(20)} height={RFValue(20)}/>
+                            <Icon fill={theme.colors.text_detail} width={RFValue(20)} height={RFValue(20)}/>
                         </Type>
                     </About>
                 </Detail>

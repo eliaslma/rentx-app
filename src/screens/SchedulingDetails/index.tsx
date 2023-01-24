@@ -1,17 +1,16 @@
-import React from 'react';
-import { isIphoneX, getStatusBarHeight, getBottomSpace } from 'react-native-iphone-x-helper';
+import React, { useState } from 'react';
 import { Feather } from '@expo/vector-icons'
 import { useTheme } from 'styled-components';
+import { StatusBar } from 'expo-status-bar';
+import { useRoute } from '@react-navigation/native';
+import { getSpecIcon } from '@myapp/utils/getSpecIcon';
+import differenceInDays from 'date-fns/differenceInDays';
+import { isIphoneX, getStatusBarHeight, getBottomSpace } from 'react-native-iphone-x-helper';
 
-import speed from '../../assets/speed.svg'
-import acceleration from '../../assets/acceleration.svg'
-import horsePower from '../../assets/force.svg'
-import gasoline from '../../assets/gasoline.svg'
-import exchange from '../../assets/exchange.svg'
-import people from '../../assets/people.svg'
+import { api } from '@myapp/services/api';
+import { CarDTO } from '@myapp/dtos/CarDTO';
 import Calendar from '../../assets/calendar.svg'
-import Arrow from '../../assets/arrow.svg'
-
+import { Loader } from '@myapp/components/Loader';
 import { DefaultButton } from '@myapp/components/DefaultButton';
 import { CarSpec } from '@myapp/components/CarSpec';
 import { BackButton } from '@myapp/components/BackButton';
@@ -46,39 +45,90 @@ import {
     Footer,
 
 } from './styles';
+import { Alert } from 'react-native';
 
 
-export function SchedulingDetails(){
+
+interface Params {
+    car: CarDTO;
+    rentalPeriod: {
+        startDate: number;
+        startDateFormatted: string;
+        endDate: number;
+        endDateFormatted: string;
+    }
+    markedDates: string[];
+}
+
+export function SchedulingDetails({navigation}){
 
     const theme = useTheme();
+    const route = useRoute();
+    const [isLoading, setLoading] = useState(false)
+    const { car, rentalPeriod, markedDates } = route.params as Params
+
+    const diaries = differenceInDays(
+        rentalPeriod.endDate,
+        rentalPeriod.startDate,
+    )
+
+    const totalPrice = diaries * car.rent.price
+    
+    async function handleConfirmScheduling(){
+        
+        try{
+            setLoading(true)
+            const schedulesByCars = await api.get(`/schedules_bycars/${car.id}`)
+
+            const unavailable_dates = [
+                ...schedulesByCars.data.unavailable_dates,
+                ...markedDates
+            ]
+
+            api.put(`/schedules_bycars/${car.id}`,{
+                id: car.id,
+                unavailable_dates})
+            .then(() => navigation.navigate('SchedulingSuccess'))
+            .catch(() => Alert.alert('Não foi possível confirmar o agendamento'))
+
+        }catch(error){
+            console.log(error)
+            Alert.alert('Não foi possível confirmar o agendamento')
+        }finally{
+            setLoading(false)
+        }
+        
+    }
 
     return(
+        
         <Container>
+            <StatusBar style='dark' translucent={false} backgroundColor={'white'}/>
             <Header style={ isIphoneX() && {paddingTop: getStatusBarHeight()}}>
                 <HeaderContent>
-                    <BackButton onPress={() => {}}/>
+                    <BackButton onPress={() => navigation.goBack()}/>
                 </HeaderContent>
             </Header>
-            <ImageSlider imagesUrl={['https://belowinvoice.com/wp-content/uploads/2021/04/Lamborguine-Huracan-Coupe-Rosso-Mars.png']}/>
+            <ImageSlider imagesUrl={car.photos}/>
+            {isLoading ? <Loader/> :
             <Content>
                 <Description>
                     <Model>
-                        <Brand>lamborguini</Brand>
-                        <Name>Huracan</Name>
+                        <Brand>{car.brand}</Brand>
+                        <Name>{car.name}</Name>
                     </Model>
                     <Rent>
-                        <Period>ao dia</Period>
-                        <Price>R$ 580</Price>
+                        <Period>{car.rent.period}</Period>
+                        <Price>R$ {car.rent.price}</Price>
                     </Rent>
                 </Description>
                 <ModelSpec>
-                    <CarSpec icon={speed} name={'380km/h'}/>
-                    <CarSpec icon={acceleration} name={'3.2s'}/>
-                    <CarSpec icon={horsePower} name={'800 HP'}/>
-                    <CarSpec icon={gasoline} name={'Gasolina'}/>
-                    <CarSpec icon={exchange} name={'Auto'}/>
-                    <CarSpec icon={people} name={'800 HP'}/>
-                </ModelSpec>
+                    {
+                        car.accessories.map(spec => (
+                        <CarSpec icon={getSpecIcon(spec.type)} name={spec.name} key={spec.type} />
+                        ))
+                    }
+                </ModelSpec> 
                 <Details>
                     <Date>
                         <Icon>
@@ -86,7 +136,7 @@ export function SchedulingDetails(){
                         </Icon>
                         <DateInfo>
                             <DateTitle>DE</DateTitle>
-                            <DateValue>18/06/2023</DateValue>
+                            <DateValue>{rentalPeriod.startDateFormatted}</DateValue>
                         </DateInfo>
                         <Feather 
                             size={24}
@@ -95,24 +145,24 @@ export function SchedulingDetails(){
                         />
                         <DateInfo>
                             <DateTitle>ATÉ</DateTitle>
-                            <DateValue>20/06/2023</DateValue>
+                            <DateValue>{rentalPeriod.endDateFormatted}</DateValue>
                         </DateInfo>
                     </Date>
                     <Daily>
                         <TotalDaily>
                             <PriceTitle>TOTAL</PriceTitle>
                             <PriceInfo>
-                                <DailyPrice>R$ 580</DailyPrice>
-                                <Days> x3 diárias</Days>
+                                <DailyPrice>R$ {car.rent.price}</DailyPrice>
+                                <Days> x{diaries} diárias</Days>
                             </PriceInfo>
                         </TotalDaily>
-                        <TotalPrice>R$ 2.900</TotalPrice>
+                        <TotalPrice>R$ {totalPrice}</TotalPrice>
                     </Daily>
                 </Details>
-                
             </Content>
+            }
             <Footer style={isIphoneX() && {paddingBottom: getBottomSpace()}}>
-                <DefaultButton title="Alugar agora" color={theme.colors.success}/>
+                <DefaultButton title="Alugar agora" color={theme.colors.success} onPress={handleConfirmScheduling}/>
             </Footer>        
         </Container>
     );
