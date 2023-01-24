@@ -7,8 +7,8 @@ export const Container = styled.View`
     padding: 16px;
     margin-bottom: 8px;
     background-color: ${({ theme }) => theme.colors.background_primary};
-    width: ${RFValue(109)}px;
-    width: ${RFValue(92)}px;
+    width: 32%;
+    
 `;
 
 export const Name = styled.Text`

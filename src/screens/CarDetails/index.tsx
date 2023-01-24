@@ -29,7 +29,7 @@ import {
 } from './styles';
 
 
-interface Params {
+export interface Params {
     car: CarDTO;
 }
 
@@ -39,7 +39,7 @@ export function CarDetails({ navigation }) {
     const { car } = route.params as Params
 
     function handleScheduling() {
-        navigation.navigate('Scheduling')
+        navigation.navigate('Scheduling', {car})
     }
 
     return (

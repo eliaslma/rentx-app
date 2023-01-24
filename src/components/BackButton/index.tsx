@@ -16,7 +16,7 @@ export function BackButton({color, ...rest}: Props){
     const theme = useTheme()
 
     return(
-        <Container>
+        <Container {...rest}>
             <Icon name="keyboard-arrow-left" color={color ? color : theme.colors.text}/>
         </Container>
     );
