@@ -60,7 +60,7 @@ interface Params {
     markedDates: string[];
 }
 
-export function SchedulingDetails({navigation}){
+export function SchedulingDetails({ navigation }) {
 
     const theme = useTheme();
     const route = useRoute();
@@ -73,97 +73,106 @@ export function SchedulingDetails({navigation}){
     )
 
     const totalPrice = diaries * car.rent.price
-    
-    async function handleConfirmScheduling(){
-        
-        try{
+
+    async function handleConfirmScheduling() {
+
+        try {
             setLoading(true)
-            const schedulesByCars = await api.get(`/schedules_bycars/${car.id}`)
+            const schedulesByCar = await api.get(`/schedules_bycars/${car.id}`)
 
             const unavailable_dates = [
-                ...schedulesByCars.data.unavailable_dates,
+                ...schedulesByCar.data.unavailable_dates,
                 ...markedDates
             ]
 
-            api.put(`/schedules_bycars/${car.id}`,{
+            api.put(`/schedules_bycars/${car.id}`, {
                 id: car.id,
-                unavailable_dates})
-            .then(() => navigation.navigate('SchedulingSuccess'))
-            .catch(() => Alert.alert('Não foi possível confirmar o agendamento'))
-
-        }catch(error){
+                unavailable_dates
+            })
+                .then(() => {
+                    api.post(`schedules_byuser`, {
+                        user_id: 1,
+                        car: car,
+                        startDate: rentalPeriod.startDateFormatted,
+                        endDate: rentalPeriod.endDateFormatted,
+                    }).then(() => {
+                        navigation.navigate('SchedulingSuccess')
+                    }).catch(() => Alert.alert('Não foi possível confirmar o agendamento'))
+                })
+                .catch(() => Alert.alert('Não foi possível confirmar o agendamento'))
+        } catch (error) {
             console.log(error)
             Alert.alert('Não foi possível confirmar o agendamento')
-        }finally{
+        } finally {
             setLoading(false)
         }
-        
+
     }
 
-    return(
-        
+    return (
+
         <Container>
-            <StatusBar style='dark' translucent={false} backgroundColor={'white'}/>
-            <Header style={ isIphoneX() && {paddingTop: getStatusBarHeight()}}>
+            <StatusBar style='dark' translucent={false} backgroundColor={'white'} />
+            <Header style={isIphoneX() && { paddingTop: getStatusBarHeight() }}>
                 <HeaderContent>
-                    <BackButton onPress={() => navigation.goBack()}/>
+                    <BackButton onPress={() => navigation.goBack()} />
                 </HeaderContent>
             </Header>
-            <ImageSlider imagesUrl={car.photos}/>
-            {isLoading ? <Loader/> :
-            <Content>
-                <Description>
-                    <Model>
-                        <Brand>{car.brand}</Brand>
-                        <Name>{car.name}</Name>
-                    </Model>
-                    <Rent>
-                        <Period>{car.rent.period}</Period>
-                        <Price>R$ {car.rent.price}</Price>
-                    </Rent>
-                </Description>
-                <ModelSpec>
-                    {
-                        car.accessories.map(spec => (
-                        <CarSpec icon={getSpecIcon(spec.type)} name={spec.name} key={spec.type} />
-                        ))
-                    }
-                </ModelSpec> 
-                <Details>
-                    <Date>
-                        <Icon>
-                            <Calendar/>
-                        </Icon>
-                        <DateInfo>
-                            <DateTitle>DE</DateTitle>
-                            <DateValue>{rentalPeriod.startDateFormatted}</DateValue>
-                        </DateInfo>
-                        <Feather 
-                            size={24}
-                            color={theme.colors.text_detail}
-                            name={'chevron-right'}
-                        />
-                        <DateInfo>
-                            <DateTitle>ATÉ</DateTitle>
-                            <DateValue>{rentalPeriod.endDateFormatted}</DateValue>
-                        </DateInfo>
-                    </Date>
-                    <Daily>
-                        <TotalDaily>
-                            <PriceTitle>TOTAL</PriceTitle>
-                            <PriceInfo>
-                                <DailyPrice>R$ {car.rent.price}</DailyPrice>
-                                <Days> x{diaries} diárias</Days>
-                            </PriceInfo>
-                        </TotalDaily>
-                        <TotalPrice>R$ {totalPrice}</TotalPrice>
-                    </Daily>
-                </Details>
-            </Content>
+            <ImageSlider imagesUrl={car.photos} />
+            {isLoading ? <Loader /> :
+                <Content>
+                    <Description>
+                        <Model>
+                            <Brand>{car.brand}</Brand>
+                            <Name>{car.name}</Name>
+                        </Model>
+                        <Rent>
+                            <Period>{car.rent.period}</Period>
+                            <Price>R$ {car.rent.price}</Price>
+                        </Rent>
+                    </Description>
+                    <ModelSpec>
+                        {
+                            car.accessories.map(spec => (
+                                <CarSpec icon={getSpecIcon(spec.type)} name={spec.name} key={spec.type} />
+                            ))
+                        }
+                    </ModelSpec>
+                    <Details>
+                        <Date>
+                            <Icon>
+                                <Calendar />
+                            </Icon>
+                            <DateInfo>
+                                <DateTitle>DE</DateTitle>
+                                <DateValue>{rentalPeriod.startDateFormatted}</DateValue>
+                            </DateInfo>
+                            <Feather
+                                size={24}
+                                color={theme.colors.text_detail}
+                                name={'chevron-right'}
+                            />
+                            <DateInfo>
+                                <DateTitle>ATÉ</DateTitle>
+                                <DateValue>{rentalPeriod.endDateFormatted}</DateValue>
+                            </DateInfo>
+                        </Date>
+                        <Daily>
+                            <TotalDaily>
+                                <PriceTitle>TOTAL</PriceTitle>
+                                <PriceInfo>
+                                    <DailyPrice>R$ {car.rent.price}</DailyPrice>
+                                    <Days> x{diaries} diárias</Days>
+                                </PriceInfo>
+                            </TotalDaily>
+                            <TotalPrice>R$ {totalPrice}</TotalPrice>
+                        </Daily>
+                    </Details>
+                </Content>
             }
-            <Footer style={isIphoneX() && {paddingBottom: getBottomSpace()}}>
-                <DefaultButton title="Alugar agora" color={theme.colors.success} onPress={handleConfirmScheduling}/>
-            </Footer>        
+            <Footer style={isIphoneX() && { paddingBottom: getBottomSpace() }}>
+                <DefaultButton title="Alugar agora" color={theme.colors.success} onPress={handleConfirmScheduling} />
+            </Footer>
         </Container>
     );
 }
