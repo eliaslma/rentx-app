@@ -1,20 +1,16 @@
-import React from 'react';
-import { isIphoneX, getStatusBarHeight, getBottomSpace } from 'react-native-iphone-x-helper';
+import React, { useState } from 'react';
 import { Feather } from '@expo/vector-icons'
 import { useTheme } from 'styled-components';
 import { StatusBar } from 'expo-status-bar';
 import { useRoute } from '@react-navigation/native';
 import { getSpecIcon } from '@myapp/utils/getSpecIcon';
+import differenceInDays from 'date-fns/differenceInDays';
+import { isIphoneX, getStatusBarHeight, getBottomSpace } from 'react-native-iphone-x-helper';
 
-import speed from '../../assets/speed.svg'
-import acceleration from '../../assets/acceleration.svg'
-import horsePower from '../../assets/force.svg'
-import gasoline from '../../assets/gasoline.svg'
-import exchange from '../../assets/exchange.svg'
-import people from '../../assets/people.svg'
+import { api } from '@myapp/services/api';
+import { CarDTO } from '@myapp/dtos/CarDTO';
 import Calendar from '../../assets/calendar.svg'
-
-
+import { Loader } from '@myapp/components/Loader';
 import { DefaultButton } from '@myapp/components/DefaultButton';
 import { CarSpec } from '@myapp/components/CarSpec';
 import { BackButton } from '@myapp/components/BackButton';
@@ -49,25 +45,63 @@ import {
     Footer,
 
 } from './styles';
-import { CarDTO } from '@myapp/dtos/CarDTO';
-import { CardCar } from '@myapp/components/CardCar';
+import { Alert } from 'react-native';
+
+
 
 interface Params {
     car: CarDTO;
+    rentalPeriod: {
+        startDate: number;
+        startDateFormatted: string;
+        endDate: number;
+        endDateFormatted: string;
+    }
+    markedDates: string[];
 }
-
 
 export function SchedulingDetails({navigation}){
 
     const theme = useTheme();
-    const route = useRoute()
-    const { car } = route.params as Params
+    const route = useRoute();
+    const [isLoading, setLoading] = useState(false)
+    const { car, rentalPeriod, markedDates } = route.params as Params
+
+    const diaries = differenceInDays(
+        rentalPeriod.endDate,
+        rentalPeriod.startDate,
+    )
+
+    const totalPrice = diaries * car.rent.price
     
-    function handleConfirmScheduling(){
-        navigation.navigate('SchedulingSuccess')
+    async function handleConfirmScheduling(){
+        
+        try{
+            setLoading(true)
+            const schedulesByCars = await api.get(`/schedules_bycars/${car.id}`)
+
+            const unavailable_dates = [
+                ...schedulesByCars.data.unavailable_dates,
+                ...markedDates
+            ]
+
+            api.put(`/schedules_bycars/${car.id}`,{
+                id: car.id,
+                unavailable_dates})
+            .then(() => navigation.navigate('SchedulingSuccess'))
+            .catch(() => Alert.alert('Não foi possível confirmar o agendamento'))
+
+        }catch(error){
+            console.log(error)
+            Alert.alert('Não foi possível confirmar o agendamento')
+        }finally{
+            setLoading(false)
+        }
+        
     }
 
     return(
+        
         <Container>
             <StatusBar style='dark' translucent={false} backgroundColor={'white'}/>
             <Header style={ isIphoneX() && {paddingTop: getStatusBarHeight()}}>
@@ -76,6 +110,7 @@ export function SchedulingDetails({navigation}){
                 </HeaderContent>
             </Header>
             <ImageSlider imagesUrl={car.photos}/>
+            {isLoading ? <Loader/> :
             <Content>
                 <Description>
                     <Model>
@@ -90,10 +125,10 @@ export function SchedulingDetails({navigation}){
                 <ModelSpec>
                     {
                         car.accessories.map(spec => (
-                        <CarSpec icon={getSpecIcon(spec.type)} name={spec.name} key={spec.name} />
+                        <CarSpec icon={getSpecIcon(spec.type)} name={spec.name} key={spec.type} />
                         ))
                     }
-                </ModelSpec>
+                </ModelSpec> 
                 <Details>
                     <Date>
                         <Icon>
@@ -101,7 +136,7 @@ export function SchedulingDetails({navigation}){
                         </Icon>
                         <DateInfo>
                             <DateTitle>DE</DateTitle>
-                            <DateValue>18/06/2023</DateValue>
+                            <DateValue>{rentalPeriod.startDateFormatted}</DateValue>
                         </DateInfo>
                         <Feather 
                             size={24}
@@ -110,21 +145,22 @@ export function SchedulingDetails({navigation}){
                         />
                         <DateInfo>
                             <DateTitle>ATÉ</DateTitle>
-                            <DateValue>20/06/2023</DateValue>
+                            <DateValue>{rentalPeriod.endDateFormatted}</DateValue>
                         </DateInfo>
                     </Date>
                     <Daily>
                         <TotalDaily>
                             <PriceTitle>TOTAL</PriceTitle>
                             <PriceInfo>
-                                <DailyPrice>R$ 580</DailyPrice>
-                                <Days> x3 diárias</Days>
+                                <DailyPrice>R$ {car.rent.price}</DailyPrice>
+                                <Days> x{diaries} diárias</Days>
                             </PriceInfo>
                         </TotalDaily>
-                        <TotalPrice>R$ 2.900</TotalPrice>
+                        <TotalPrice>R$ {totalPrice}</TotalPrice>
                     </Daily>
                 </Details>
             </Content>
+            }
             <Footer style={isIphoneX() && {paddingBottom: getBottomSpace()}}>
                 <DefaultButton title="Alugar agora" color={theme.colors.success} onPress={handleConfirmScheduling}/>
             </Footer>        
