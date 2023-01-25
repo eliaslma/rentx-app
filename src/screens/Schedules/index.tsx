@@ -33,16 +33,19 @@ interface SchedulesProps {
 export function Schedules({ handleCloseModal }) {
 
     const theme = useTheme();
-    const [isLoading, setLoading] = useState(true)
+    const [isLoading, setLoading] = useState<boolean>()
     const [schedules, setSchedules] = useState<SchedulesProps[]>([])
 
     async function getSchedulesList() {
 
         try {
+            setLoading(true)
             const schedulesByUser = await api.get('schedules_byuser')
             setSchedules(schedulesByUser.data)
         } catch (e) {
-            Alert.alert('Não foi possível carregar os agendamentos')
+            Alert.alert('Sem conexão','Não foi possível carregar os agendamentos',[
+                {text: 'OK', onPress: () => getSchedulesList()}
+            ])
         } finally {
             setLoading(false)
         }

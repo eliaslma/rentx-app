@@ -13,7 +13,6 @@ export default {
 
         main: "#DC1637",
         main_light: "#FDEDEF",
-        disabled_button: "rgba(220, 22, 55, 0.5)",
         success: "#03B252",
 
         shape: "#E1E1E8",

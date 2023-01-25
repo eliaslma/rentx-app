@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, Platform, Modal } from 'react-native';
+import { FlatList, Platform, Modal, Alert } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useState, useEffect } from 'react';
@@ -28,17 +28,24 @@ import {
 export function Home({navigation}){
 
     const [carList,setCarList] = useState<CarDTO[]>([])
-    const [isLoading, setLoading] = useState(true)
+    const [isLoading, setLoading] = useState<boolean>()
     const [modalVisible, setModalVisible] = useState(false);
     
     const theme = useTheme()
 
     async function getCarList(){
         try{
+            setLoading(true)
             const response = await api.get('/cars')
             setCarList(response.data)
         }catch(e){
+            
+            Alert.alert('Sem conexão', 'O aparalho está desconectado da internet',[
+                {text: 'OK', onPress: () => getCarList()}
+                ]
+                )
             console.log(e)
+            
         }
         finally{
             setLoading(false)
