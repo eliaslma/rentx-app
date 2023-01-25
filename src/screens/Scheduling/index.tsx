@@ -51,15 +51,11 @@ export function Scheduling({navigation}){
 
     function handleConfirmPeriod(){
 
-        if(!rentalPeriod.startDate){
-            Alert.alert('Selecione o período desejado')
+        if(rentalPeriod.startDate === rentalPeriod.endDate){
+            Alert.alert('Selecione a data final', 'O perído minímo é de uma diária')
         }
 
-        if(rentalPeriod.startDate && rentalPeriod.startDate === rentalPeriod.endDate){
-            Alert.alert('Selecione a data final')
-        }
-
-        if(rentalPeriod.startDate != rentalPeriod.endDate ) {
+        else {
             navigation.navigate('SchedulingDetails', {
                 car,
                 rentalPeriod,
@@ -119,7 +115,11 @@ export function Scheduling({navigation}){
                 <Calendar onDayPress={handleChangeDate} markedDates={markedDates}/>
             </Content>
             <Footer style={isIphoneX() && {paddingBottom: getBottomSpace()}}>
-                <DefaultButton title="Confirmar" color={!rentalPeriod.startDate && theme.colors.disabled_button} onPress={handleConfirmPeriod}/>
+                <DefaultButton 
+                    title="Confirmar" 
+                    onPress={handleConfirmPeriod}
+                    enabled={!!rentalPeriod.startDate}
+                />
             </Footer>
         </Container>
     );

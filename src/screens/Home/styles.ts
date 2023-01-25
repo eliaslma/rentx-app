@@ -27,9 +27,9 @@ export const TotalCars = styled.Text`
     color: ${({ theme }) => theme.colors.text};
 `;
 
-export const LoadContainer = styled.View`
-    flex: 1;
-    align-items: center;
-    justify-content: center;
+export const SchedulesButtonWrapper = styled.View`
+    position: absolute;
+    align-self: flex-end;
+    padding: 22px;
+    bottom: 0;
 `;
-
