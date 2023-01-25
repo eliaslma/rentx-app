@@ -8,6 +8,7 @@ interface ButtonProps extends RectButtonProps {
 }
 
 export const Container = styled(RectButton)<ButtonProps>`
+    flex-direction: row;
     background-color: ${({ color, theme }) => color ? color : theme.colors.main };
     justify-content: center;
     align-items: center;
@@ -19,4 +20,5 @@ export const Title = styled.Text`
     font-family: ${({ theme }) => theme.fonts.inter_medium};
     font-size: ${RFValue(15)}px;
     color: ${({ theme }) => theme.colors.background_secondary};
+    margin-right: 4px;
 `;
