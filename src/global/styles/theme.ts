@@ -7,6 +7,7 @@ export default {
 
         text: "#7A7A80",
         text_detail: "#AEAEB3",
+        text_support: "#737380",
         title: "#47474D",
 
         line: "#EBEBF0",
@@ -16,13 +17,14 @@ export default {
         success: "#03B252",
 
         shape: "#E1E1E8",
+        shape_light: "#F2F2FA",
         shape_dark: "#29292E",
-        
+
     },
     fonts: {
         inter_regular: "Inter_400Regular",
         inter_medium: "Inter_500Medium",
-        
+
         archivo_regular: "Archivo_400Regular",
         archivo_medium: "Archivo_500Medium",
         archivo_semibold: "Archivo_600SemiBold"
