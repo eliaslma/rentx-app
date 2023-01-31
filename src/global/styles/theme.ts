@@ -15,6 +15,7 @@ export default {
         main: "#DC1637",
         main_light: "#FDEDEF",
         success: "#03B252",
+        alert: "rgba(220, 22, 55, 0.5)",
 
         shape: "#E1E1E8",
         shape_light: "#F2F2FA",
