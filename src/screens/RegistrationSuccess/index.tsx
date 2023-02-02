@@ -17,9 +17,13 @@ import {
     Footer
 } from './styles';
 
-export function RegistrationSuccess(){
+export function RegistrationSuccess({navigation}){
 
     const theme = useTheme();
+
+    function handleGoBack(){
+        navigation.navigate('SignIn')
+    }
 
     return(
         <Container>
@@ -36,7 +40,7 @@ export function RegistrationSuccess(){
                 </Message>
             </Content>
             <Footer>
-                <ConfirmButton onPress={() => {}}>
+                <ConfirmButton onPress={() => setTimeout(handleGoBack,2000)}>
                     <ButtonTitle>Ok</ButtonTitle>
                 </ConfirmButton>
             </Footer>
