@@ -10,6 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from "yup";
 import { useRoute } from '@react-navigation/native';
 
+import { api } from '@myapp/services/api';
 import Password from '../../../assets/password.svg'
 import { DefaultButton } from '@myapp/components/DefaultButton';
 import { InputForm } from '@myapp/components/InputForm';
@@ -44,14 +45,14 @@ interface Params {
     }
 }
 
-export function SecondStep() {
+export function SignUpSecondStep({navigation}) {
 
     const theme = useTheme()
     const [showTitle, setShowTitle] = useState(true)
     const [isLoading, setLoading] = useState<boolean>()
 
-    //const route = useRoute();
-    //const { user } = route.params as Params
+    const route = useRoute();
+    const { user } = route.params as Params
 
     const { control, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(schema)
@@ -63,12 +64,23 @@ export function SecondStep() {
         }
     }
 
-    function handleRegister(data: FormData) {
+    async function handleRegister(data: FormData) {
         if (data.password != data.confirmationPassword) {
             return Alert.alert('', 'As senhas não conferem.')
         }
-        console.log(data)
-        setLoading(true)
+
+        await api.post('/users', {
+            name: user.name,
+            email: user.email,
+            password: data.password,
+            driver_license: '',
+        }).then(() => {
+            setLoading(true)
+            navigation.navigate('RegistrationSuccess')
+        }).catch((error) => {
+            console.log(error)
+            Alert.alert('Opa', 'Não foi possível cadastrar o usuário!')
+        })
     }
 
     return (
@@ -78,7 +90,7 @@ export function SecondStep() {
                 <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                     <Header style={isIphoneX() && { paddingTop: getStatusBarHeight() }}>
                         <BackButtonWrapper>
-                            <BackButton onPress={() => { }} />
+                            <BackButton onPress={() => navigation.goBack()} />
                             <StepIndexes>
                                 <StepIndex active={false} />
                                 <StepIndex active={true} />

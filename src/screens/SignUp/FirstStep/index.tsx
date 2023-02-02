@@ -37,7 +37,7 @@ interface FormData {
     email: string;
 }
 
-export function FirstStep({ navigation }) {
+export function SignUpFirstStep({ navigation }) {
 
     const theme = useTheme()
     const [showTitle, setShowTitle] = useState(true)
@@ -54,9 +54,7 @@ export function FirstStep({ navigation }) {
     }
 
     function handleNextStep(userData: FormData) {
-        console.log(userData)
-        navigation.navigate('SecondStep', {})
-        setLoading(true)
+        navigation.navigate('SignUpSecondStep', {user: userData} )
     }
 
     return (
@@ -66,7 +64,7 @@ export function FirstStep({ navigation }) {
                 <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                     <Header style={isIphoneX() && { paddingTop: getStatusBarHeight() }}>
                         <BackButtonWrapper>
-                            <BackButton onPress={() => { }} />
+                            <BackButton onPress={() => navigation.goBack()} />
                             <StepIndexes>
                                 <StepIndex active={true} />
                                 <StepIndex active={false} />
