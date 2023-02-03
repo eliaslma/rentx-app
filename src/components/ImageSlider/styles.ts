@@ -1,5 +1,6 @@
 import { RFValue } from 'react-native-responsive-fontsize';
 import styled from 'styled-components/native';
+import { Dimensions } from 'react-native';
 
 interface ImageIndexProps {
     active: boolean;
@@ -7,11 +8,14 @@ interface ImageIndexProps {
 
 export const Container = styled.View`
     width: 100%;
+    align-items: center;
 `;
 
-export const CarImageWapper = styled.View`
-    width: 100%;
-    align-items: center;
+export const CarImageWrapper = styled.View`
+  width: ${Dimensions.get('window').width}px;
+  height: ${RFValue(132)}px;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const CarImage = styled.Image`
