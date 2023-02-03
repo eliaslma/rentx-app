@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { isIphoneX, getStatusBarHeight } from 'react-native-iphone-x-helper';
 import { KeyboardAvoidingView } from 'react-native';
-import { TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
 import { Platform } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useTheme } from 'styled-components';
 import { useForm } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from "yup";
+import { useAuth } from '@myapp/hooks/auth';
 
 import Email from '../../assets/email.svg';
 import Password from '../../assets/password.svg';
@@ -22,7 +23,7 @@ import {
     Form,
     RememberPass,
     CheckRemember,
-    CheckBoxWrapper,
+    ForgotPassWrapper,
     CheckBox,
     RemindMe,
     ForgotPass,
@@ -40,7 +41,9 @@ interface FormData {
     password: string;
 }
 
-export function SignIn() {
+export function SignIn({navigation}) {
+
+    const { signIn } = useAuth();
 
     const [showTitle, setShowTitle] = useState(true)
     const [isLoading, setLoading] = useState<boolean>()
@@ -61,9 +64,18 @@ export function SignIn() {
         setCheckBoxSelected(!checkBoxSelected)
     }
 
-    function handleSignIn(data: FormData) {
-        console.log(data)
-        setLoading(true)
+   async function handleSignIn(data: FormData) {
+
+       try { 
+            setLoading(true)
+            await signIn(data)
+       }catch(error){
+            Alert.alert('','Não foi possível logar')
+            console.log(error)
+       }finally{
+          setTimeout(setLoading,500)
+       }
+        
     }
 
     return (
@@ -73,7 +85,7 @@ export function SignIn() {
                 <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                     <Header style={isIphoneX() && { paddingTop: getStatusBarHeight() }}>
                         <BackButtonWrapper>
-                            <BackButton onPress={() => { }} />
+                            <BackButton onPress={() => navigation.navigate('OnboardMain')} />
                         </BackButtonWrapper>
                         {showTitle &&
                             <Title>
@@ -109,12 +121,12 @@ export function SignIn() {
                         </Form>
                         <RememberPass>
                             <CheckRemember>
-                                <CheckBoxWrapper isSelected={checkBoxSelected}>
-                                    <CheckBox onPress={handleCheckBox} isSelected={checkBoxSelected} />
-                                </CheckBoxWrapper>
+                                <CheckBox onPress={handleCheckBox} isSelected={checkBoxSelected} />
                                 <RemindMe>Lembrar-me</RemindMe>
                             </CheckRemember>
-                            <ForgotPass>Esqueci minha senha</ForgotPass>
+                            <ForgotPassWrapper>
+                                <ForgotPass>Esqueci minha senha</ForgotPass>
+                            </ForgotPassWrapper>
                         </RememberPass>
                         <DefaultButton title="Login" loading={isLoading} onPress={handleSubmit(handleSignIn)} enabled={!isLoading} />
                     </Content>

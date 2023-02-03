@@ -1,6 +1,7 @@
-import { GestureHandlerRootView, RectButton } from 'react-native-gesture-handler';
+import { BorderlessButton, GestureHandlerRootView } from 'react-native-gesture-handler';
 import { RFValue } from 'react-native-responsive-fontsize';
 import styled, { css } from 'styled-components/native';
+import { RectButton } from 'react-native-gesture-handler';
 
 
 interface CheckBoxProps {
@@ -44,19 +45,9 @@ export const CheckRemember = styled.View`
     align-items: center;
 `;
 
-export const CheckBoxWrapper = styled.View<CheckBoxProps>`
+export const ForgotPassWrapper = styled.TouchableOpacity``;
 
-    ${({ isSelected }) => (
-        isSelected && css`
-            border-width: ${RFValue(4)}px;
-            border-color: 'black';
-        `
-    )};
-    
-`;
-
-export const CheckBox = styled(RectButton) <CheckBoxProps>`
-
+export const CheckBox = styled.TouchableOpacity <CheckBoxProps>`
     background-color: ${({ theme }) => theme.colors.line};
     width: ${RFValue(20)}px;
     height: ${RFValue(20)}px;
@@ -64,8 +55,8 @@ export const CheckBox = styled(RectButton) <CheckBoxProps>`
     ${({ isSelected }) => (
         isSelected && css`
             background-color: ${({ theme }) => theme.colors.background_secondary};
-            width: ${RFValue(12)}px;
-            height: ${RFValue(12)}px;
+            border-width: ${RFValue(6)}px;
+            border-color: 'black';
         `
     )};
 `;
