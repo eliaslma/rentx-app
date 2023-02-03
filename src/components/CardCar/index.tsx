@@ -39,8 +39,8 @@ export function CardCar({data, icon: Icon, ...rest} : CardProps){
                     </Model>
                     <About>
                         <Rent>
-                            <Period>{data.rent.period}</Period>
-                            <Price>R$ {data.rent.price}</Price>
+                            <Period>{data.period}</Period>
+                            <Price>R$ {data.price}</Price>
                         </Rent>
                         <Type>
                             <Icon fill={theme.colors.text_detail} width={RFValue(20)} height={RFValue(20)}/>

@@ -69,7 +69,7 @@ export function SchedulingDetails({ navigation }) {
         rentalPeriod.startDate,
     )
 
-    const totalPrice = diaries * car.rent.price
+    const totalPrice = diaries * car.price
 
     async function handleConfirmScheduling() {
 
@@ -123,8 +123,8 @@ export function SchedulingDetails({ navigation }) {
                         <Name>{car.name}</Name>
                     </Model>
                     <Rent>
-                        <Period>{car.rent.period}</Period>
-                        <Price>R$ {car.rent.price}</Price>
+                        <Period>{car.period}</Period>
+                        <Price>R$ {car.price}</Price>
                     </Rent>
                 </Description>
                 <ModelSpec>
@@ -157,7 +157,7 @@ export function SchedulingDetails({ navigation }) {
                         <TotalDaily>
                             <PriceTitle>TOTAL</PriceTitle>
                             <PriceInfo>
-                                <DailyPrice>R$ {car.rent.price}</DailyPrice>
+                                <DailyPrice>R$ {car.price}</DailyPrice>
                                 <Days> x{diaries} { diaries == 1 ? 'diária' : 'diárias'}</Days>
                             </PriceInfo>
                         </TotalDaily>

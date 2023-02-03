@@ -1,12 +1,15 @@
+
 interface IAccessories {
     id: string;
     type: string;
     name: string;
+    car_id: string;
 }
 
 export interface IPhotos {
     id: string;
     photo: string;
+    car_id: string;
 }
 
 export interface CarDTO {
@@ -16,13 +19,9 @@ export interface CarDTO {
     about: string,
     fuel_type: string,
     thumbnail: string,
-    rent: {
-        period: string,
-        price: number
-    },
-    accessories: {
-        type: string,
-        name: string,
-    }[];
-    photos: string[];
+    period: string,
+    price: number
+    accessories: IAccessories[];
+    photos: IPhotos[];
 }
+ 
