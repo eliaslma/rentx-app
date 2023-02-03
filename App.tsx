@@ -7,6 +7,7 @@ import { Loader } from '@myapp/components/Loader';
 import theme from '@myapp/global/styles/theme';
 import { ThemeProvider } from 'styled-components';
 import 'react-native-gesture-handler';
+import { AppProvider } from '@myapp/hooks';
 
 
 import {
@@ -20,6 +21,13 @@ import {
     Archivo_600SemiBold,
 } from '@expo-google-fonts/archivo'
 
+
+import { RegistrationSuccess } from '@myapp/screens/RegistrationSuccess';
+import { ChangesCompleted } from '@myapp/screens/ChangesCompleted';
+import { SignOut } from '@myapp/screens/SignOut';
+import { SignIn } from '@myapp/screens/SignIn';
+import { SignUpFirstStep } from '@myapp/screens/SignUp/FirstStep';
+import { SignUpSecondStep } from '@myapp/screens/SignUp/SecondStep';
 
 export default function App(){
 
@@ -39,7 +47,9 @@ export default function App(){
 
     return (
         <ThemeProvider theme={theme}>
-            <Routes/>
+            <AppProvider>
+                <Routes/>
+            </AppProvider>
         </ThemeProvider>
     );
 }
