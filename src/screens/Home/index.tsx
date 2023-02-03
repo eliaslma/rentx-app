@@ -34,22 +34,19 @@ export function Home({navigation}){
     const theme = useTheme()
 
     async function getCarList(){
-        try{
-            setLoading(true)
-            const response = await api.get('/cars')
+
+        setLoading(true)
+
+        await api.get('/cars')
+        .then((response) => {
             setCarList(response.data)
-        }catch(e){
-            
+            setLoading(false)})
+        .catch((error) => {
             Alert.alert('Sem conexão', 'O aparalho está desconectado da internet',[
                 {text: 'OK', onPress: () => getCarList()}
-                ]
-                )
-            console.log(e)
-            
-        }
-        finally{
-            setLoading(false)
-        }
+            ])
+            console.log(error)
+        })
     }
 
     function handleCarDetails(car: CarDTO){
