@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, Platform, Modal, Alert } from 'react-native';
+import { FlatList, Platform, Alert } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useState, useEffect } from 'react';
@@ -13,15 +13,12 @@ import { CarDTO } from '@myapp/dtos/CarDTO';
 import { getSpecIcon } from '@myapp/utils/getSpecIcon';
 import { Loader } from '@myapp/components/Loader';
 import { CardCar } from '@myapp/components/CardCar';
-import { SchedulesButton } from '@myapp/components/SchedulesButton';
-import { Schedules } from '../Schedules';
 
 import {
     Container,
     Header,
     HeaderContent,
     TotalCars,
-    SchedulesButtonWrapper,
 } from './styles';
 
 
@@ -29,7 +26,6 @@ export function Home({navigation}){
 
     const [carList,setCarList] = useState<CarDTO[]>([])
     const [isLoading, setLoading] = useState<boolean>()
-    const [modalVisible, setModalVisible] = useState(false);
     
     const theme = useTheme()
 
@@ -51,10 +47,6 @@ export function Home({navigation}){
 
     function handleCarDetails(car: CarDTO){
         navigation.navigate('CarDetails', {car} )
-    }
-
-    function handleCloseModal(){
-        setModalVisible(false)
     }
 
     useEffect(() => {
@@ -81,12 +73,6 @@ export function Home({navigation}){
                     )}
                 />
             }
-            <Modal visible={modalVisible} animationType="fade">
-                <Schedules handleCloseModal={handleCloseModal}/>
-            </Modal>
-            <SchedulesButtonWrapper style={ Platform.OS === 'ios' && { paddingBottom: getBottomSpace()} }>
-                <SchedulesButton onPress={() => setModalVisible(true)}/>
-            </SchedulesButtonWrapper>
         </Container>
    );
 }
