@@ -26,10 +26,3 @@ export const TotalCars = styled.Text`
     font-size: ${RFValue(15)}px;
     color: ${({ theme }) => theme.colors.text};
 `;
-
-export const SchedulesButtonWrapper = styled.View`
-    position: absolute;
-    align-self: flex-end;
-    padding: 22px;
-    bottom: 0;
-`;
