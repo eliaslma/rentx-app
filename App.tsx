@@ -18,6 +18,7 @@ import {
     Archivo_400Regular,
     Archivo_500Medium,
     Archivo_600SemiBold,
+    Archivo_700Bold
 } from '@expo-google-fonts/archivo'
 
 export default function App(){
@@ -28,6 +29,7 @@ export default function App(){
         Archivo_400Regular,
         Archivo_500Medium,
         Archivo_600SemiBold,
+        Archivo_700Bold
     }); 
 
     if(!fontsLoaded){

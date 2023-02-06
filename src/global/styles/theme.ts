@@ -28,7 +28,8 @@ export default {
 
         archivo_regular: "Archivo_400Regular",
         archivo_medium: "Archivo_500Medium",
-        archivo_semibold: "Archivo_600SemiBold"
+        archivo_semibold: "Archivo_600SemiBold",
+        archivo_bold: "Archivo_700Bold"
     }
 
 }
