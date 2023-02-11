@@ -6,8 +6,9 @@ import {
 } from "react";
 
 import { useEffect } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { api } from "@myapp/services/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Alert } from "react-native";
 
 interface userData{
     avatar: string,
@@ -25,12 +26,12 @@ interface authState{
 interface SignCredentials{
     email: string;
     password: string;
-
 }
 
 interface AuthContextProps{
     user: userData
     signIn: (credentials: SignCredentials) => Promise<void>
+    signOut(): Promise<void>;
     userStorageLoading: boolean;
 }
 
@@ -45,36 +46,41 @@ function AuthProvider({children} : AuthProviderProps){
 
     const [userStorageLoading,setUserStorageLoading] = useState(true);
     const [userAuthState, setUserAuthState] = useState<authState>({} as authState)
-    const userStorageKey = '@gofinances:user';
+    const userStorageKey = '@rentx:user';
 
     async function signIn(userCredential: SignCredentials){
+
         await api.post('/sessions', {
             email: userCredential.email,
             password: userCredential.password
         }).then((response) => {
             const { user, token } = response.data;
-            const userAuthenticade : authState = {
+            const userAuthenticad : authState = {
                 token: token,
                 user: user
             }
             api.defaults.headers.authorization = `Bearer ${token}`;
             setUserAuthState({ user, token })
-            setAuthenticatedUserData(userAuthenticade)
+            setLocalStorageAuthenticatedUserData(userAuthenticad)
         }).catch((error) => {
             throw Error(error)
         })
+
     }
 
-    async function setAuthenticatedUserData(userAuthenticad: authState){
+    // persiste dados do usuário autenticado
+    async function setLocalStorageAuthenticatedUserData(userAuthenticad: authState){
+
         try {
             await AsyncStorage.setItem(userStorageKey,JSON.stringify(userAuthenticad))
         }catch(e){
             console.log(e)
         }
+
     }
 
     async function getAuthenticatedUserData(){
-        
+
             const userData = await AsyncStorage.getItem(userStorageKey) 
             if(userData){
                 const userDataFormatted = JSON.parse(userData) as authState
@@ -82,7 +88,17 @@ function AuthProvider({children} : AuthProviderProps){
                 setUserAuthState(userDataFormatted)
             }
             setUserStorageLoading(false)
-    } 
+    }
+
+    async function signOut(){
+        try{
+            setUserAuthState({} as authState)
+            await AsyncStorage.removeItem(userStorageKey)
+        }catch(e){
+            console.log(e)
+            Alert.alert('','Não foi possível deslogar')
+        }
+    }
 
     useEffect(() => {
         getAuthenticatedUserData(); 
@@ -92,6 +108,7 @@ function AuthProvider({children} : AuthProviderProps){
         <AuthContext.Provider value={{
             user: userAuthState.user,
             signIn,
+            signOut,
             userStorageLoading
         }}>
             {children}
