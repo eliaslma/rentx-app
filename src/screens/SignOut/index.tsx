@@ -1,5 +1,6 @@
 import React from 'react';
 import Exit from '../../assets/exit.svg'
+import { useAuth } from '@myapp/hooks/auth';
 import { StatusBar } from 'expo-status-bar';
 import { useTheme } from 'styled-components';
 import IconX from '../../assets/logo_background_gray.svg'
@@ -20,9 +21,15 @@ import {
 } from './styles';
 
 
-export function SignOut() {
+
+export function SignOut({navigation}) {
 
     const theme = useTheme();
+    const { signOut } = useAuth();
+
+    function handleConfirmSignOut(){
+        signOut()
+    }
 
     return (
         <Container>
@@ -40,10 +47,10 @@ export function SignOut() {
             </Content>
             <Footer>
                 <ButtonsWrapper>
-                    <DenyButton onPress={() => { }}>
+                    <DenyButton onPress={() => navigation.navigate('Profile')}>
                         <ButtonTitle>Não</ButtonTitle>
                     </DenyButton>
-                    <ConfirmButton onPress={() => { }}>
+                    <ConfirmButton onPress={handleConfirmSignOut}>
                         <ButtonTitle>Sim</ButtonTitle>
                     </ConfirmButton>
                 </ButtonsWrapper>

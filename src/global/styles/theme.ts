@@ -9,6 +9,7 @@ export default {
         text_detail: "#AEAEB3",
         text_support: "#737380",
         title: "#47474D",
+        title_profile: "#3D3D4D",
 
         line: "#EBEBF0",
 

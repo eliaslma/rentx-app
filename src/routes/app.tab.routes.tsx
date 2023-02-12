@@ -3,6 +3,7 @@ import { useTheme } from 'styled-components';
 import Home from '../assets/home.svg'
 import Car from '../assets/car.svg'
 import Perfil from '../assets/perfil.svg'
+import { RFValue } from 'react-native-responsive-fontsize';
 
 //Screens
 import { Schedules } from '@myapp/screens/Schedules';
@@ -10,7 +11,6 @@ import { Profile } from '@myapp/screens/Profile';
 
 //Routes
 import { AppStackRoutes } from './app.stack.routes';
-import { RFValue } from 'react-native-responsive-fontsize';
 
 export function AppTabRoutes(){
 
