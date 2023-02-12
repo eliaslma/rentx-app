@@ -4,6 +4,7 @@ import { Feather } from '@expo/vector-icons';
 
 export const Container = styled.View`
     flex: 1;
+    background-color: ${({theme}) => theme.colors.background_secondary};
 `;
 
 export const Header = styled.View`
@@ -11,6 +12,7 @@ export const Header = styled.View`
     width: 100%;
     height: ${RFValue(227)}px;
     padding-top: 30px;
+    position: absolute;
 `;
 
 export const ProfileOptions = styled.View`
@@ -38,7 +40,7 @@ export const Title = styled.Text`
 export const UserInfo = styled.View`
     width: 100%;
     align-items: center;
-    top: ${RFValue(-90)}px;
+    margin-top: ${RFValue(227) - 110}px;
 `;
 
 export const Photo = styled.Image`
@@ -49,7 +51,7 @@ export const Photo = styled.Image`
 
 export const Name = styled.Text`
     font-family: ${({ theme }) => theme.fonts.archivo_semibold};
-    color: ${({ theme }) => theme.colors.title};
+    color: ${({ theme }) => theme.colors.title_profile};
     font-size: ${RFValue(30)}px;
     margin-top: 24px;
     text-align: center;
