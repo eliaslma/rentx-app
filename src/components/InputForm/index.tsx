@@ -19,11 +19,12 @@ interface InputFormProps {
     isPassword?: boolean;
     placeholder: string;
     keyboardType?: KeyboardTypeOptions;
-    onFocus: Function;
-    onBlur: Function;
+    onFocus?: Function;
+    onBlur?: Function;
     control: Control;
     name: string;
     error: FieldValues;
+    defaultValue?: string;
 }
 
 export function InputForm({
@@ -35,7 +36,8 @@ export function InputForm({
     keyboardType,
     name,
     control,
-    error
+    error,
+    defaultValue
 }: InputFormProps) {
 
     const theme = useTheme()
@@ -56,14 +58,15 @@ export function InputForm({
                     render={({ field: { onChange, value } }) => (
                         <Input
                             onChangeText={onChange}
-                            onFocus={() => onFocus(false)}
+                            onFocus={() => onFocus && onFocus(false)}
                             secureTextEntry={hidePassword}
                             placeholder={placeholder}
                             autoCapitalize="none"
                             autoCorrect={false}
                             keyboardType={keyboardType}
-                            onBlur={() => onBlur(true)}
+                            onBlur={() => onBlur && onBlur(true)}
                             value={value}
+                            defaultValue={defaultValue}
                         />)}
                     name={name}
                 />
