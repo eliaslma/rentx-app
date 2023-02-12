@@ -7,6 +7,10 @@ import { CarDetails } from '@myapp/screens/CarDetails';
 import { Scheduling } from '@myapp/screens/Scheduling';
 import { SchedulingDetails } from '@myapp/screens/SchedulingDetails';
 import { SchedulingSuccess } from '@myapp/screens/SchedulingSuccess';
+import { SignOut } from '@myapp/screens/SignOut';
+import { EditProfile } from '@myapp/screens/EditProfile';
+
+
 
 export function AppStackRoutes(){
 
@@ -19,6 +23,8 @@ export function AppStackRoutes(){
             <Stack.Screen name="Scheduling" component={Scheduling}/>
             <Stack.Screen name="SchedulingDetails" component={SchedulingDetails}/>
             <Stack.Screen name="SchedulingSuccess" component={SchedulingSuccess}/>
+            <Stack.Screen name="SignOut" component={SignOut}/>
+            <Stack.Screen name="EditProfile" component={EditProfile}/>
         </Stack.Navigator>
     );
 }

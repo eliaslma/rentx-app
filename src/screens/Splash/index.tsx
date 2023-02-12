@@ -14,7 +14,7 @@ export function Splash({ navigation }) {
     const { user } = useAuth()
 
     function startApp() {
-        const nextScreen = user ? 'Home' : 'OnboardMain';
+        const nextScreen = user ? 'Home' : 'OnboardFirstStep';
         navigation.navigate(nextScreen);
     }
 
@@ -26,7 +26,7 @@ export function Splash({ navigation }) {
                     from={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{
-                        type: 'timing', duration: 3000, repeat: 2, repeatReverse: true
+                        type: 'timing', duration: 1500, repeat: 2, repeatReverse: true
                     }}
                     onDidAnimate={(opacity, finished, value) => { !value && startApp() }}
                 >
@@ -38,7 +38,7 @@ export function Splash({ navigation }) {
                     from={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{
-                        type: 'timing', duration: 3000, repeat: 2, repeatReverse: true
+                        type: 'timing', duration: 1500, repeat: 2, repeatReverse: true
                     }}
                     onDidAnimate={(opacity, finished, value) => { !value && setFirstLoaded(true) }}
                 >

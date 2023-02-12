@@ -50,7 +50,7 @@ export function OnboardMain({ navigation }) {
                         <ButtonTitle>Cadastro</ButtonTitle>
                     </RegisterButton>
                 </ButtonsWrapper>
-                <BackButton>
+                <BackButton onPress={() => navigation.navigate('OnboardFirstStep')}>
                     <BackButtonTitle>Voltar</BackButtonTitle>
                 </BackButton>
             </Footer>
