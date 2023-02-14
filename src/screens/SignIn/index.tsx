@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { isIphoneX, getStatusBarHeight } from 'react-native-iphone-x-helper';
-import { KeyboardAvoidingView } from 'react-native';
-import { TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
-import { Platform } from 'react-native';
+import { KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useTheme } from 'styled-components';
 import { useForm } from "react-hook-form";

@@ -47,7 +47,7 @@ export function SignOut({navigation}) {
             </Content>
             <Footer>
                 <ButtonsWrapper>
-                    <DenyButton onPress={() => navigation.navigate('Profile')}>
+                    <DenyButton onPress={() => navigation.goBack()}>
                         <ButtonTitle>Não</ButtonTitle>
                     </DenyButton>
                     <ConfirmButton onPress={handleConfirmSignOut}>

@@ -10,7 +10,8 @@ import { Schedules } from '@myapp/screens/Schedules';
 import { Profile } from '@myapp/screens/Profile';
 
 //Routes
-import { AppStackRoutes } from './app.stack.routes';
+import { HomeRoutes } from './app.stack.routes';
+import { ProfileRoutes } from './app.stack.routes';
 
 export function AppTabRoutes(){
 
@@ -19,7 +20,7 @@ export function AppTabRoutes(){
 
     return(
         <Tab.Navigator screenOptions={{ headerShown: false, tabBarShowLabel: false, tabBarActiveTintColor: theme.colors.main}}>
-            <Tab.Screen name="AppStackRoutes" component={AppStackRoutes} 
+            <Tab.Screen name="HomeRoutes" component={HomeRoutes} 
             options={{
                 tabBarIcon: ({color}) =>  
                     <Home fill={color} width={RFValue(24)} height={RFValue(24)}/>
@@ -30,7 +31,7 @@ export function AppTabRoutes(){
                     <Car fill={color} width={RFValue(24)} height={RFValue(24)}/>
             }}/>
             
-            <Tab.Screen name="Profile" component={Profile}
+            <Tab.Screen name="ProfileRoutes" component={ProfileRoutes}
             options={{
                 tabBarIcon: ({color}) =>  
                     <Perfil fill={color} width={RFValue(24)} height={RFValue(24)}/>
