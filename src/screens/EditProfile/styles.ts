@@ -15,7 +15,7 @@ export const Container = styled(GestureHandlerRootView)`
 export const Header = styled.View`
     background-color: ${({ theme }) => theme.colors.header};
     width: 100%;
-    height: ${RFValue(227)}px;
+    height: ${RFValue(200)}px;
     padding-top: 30px;
     position: absolute;
 `;
@@ -45,7 +45,7 @@ export const Icon = styled(MaterialIcons)`
 export const UserInfo = styled.View`
     width: 100%;
     align-items: center;
-    margin-top: ${RFValue(227) - 110}px;
+    margin-top: ${RFValue(200) - 110}px;
     padding: 0px 24px;
 `;
 
@@ -103,11 +103,6 @@ export const ChangePassword = styled.TouchableOpacity<Props>`
 
 export const UserData = styled.View`
     flex: 1;
-    justify-content: space-between;
     padding: 24px;
 `;
 
-export const FormWrapper = styled.View`
-
-
-`;

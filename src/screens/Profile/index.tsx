@@ -32,7 +32,7 @@ export function Profile({ navigation }) {
                 </ProfileOptions>
             </Header>
             <UserInfo>
-                <Photo source={{ uri: 'https://avatars.githubusercontent.com/u/70176310?v=4' }} />
+                <Photo source={{ uri: user.avatar ? user.avatar : 'https://www.kuppingercole.com/pics//defperson.jpg' }} />
                 <Name>{user.name}</Name>
             </UserInfo>
         </Container>

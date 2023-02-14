@@ -23,8 +23,9 @@ interface InputFormProps {
     onBlur?: Function;
     control: Control;
     name: string;
-    error: FieldValues;
+    error?: FieldValues;
     defaultValue?: string;
+    editable?: boolean;
 }
 
 export function InputForm({
@@ -37,7 +38,8 @@ export function InputForm({
     name,
     control,
     error,
-    defaultValue
+    defaultValue,
+    editable
 }: InputFormProps) {
 
     const theme = useTheme()
@@ -67,6 +69,7 @@ export function InputForm({
                             onBlur={() => onBlur && onBlur(true)}
                             value={value}
                             defaultValue={defaultValue}
+                            editable={editable}
                         />)}
                     name={name}
                 />
