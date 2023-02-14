@@ -5,6 +5,8 @@ import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { useAuth } from '@myapp/hooks/auth';
 import { Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { propsNavigationStack } from '@myapp/routes/Models';
 
 import { DefaultButton } from '../DefaultButton';
 import { InputForm } from '@myapp/components/InputForm';
@@ -21,8 +23,10 @@ const schema = Yup.object().shape({
 
 export function UserDataForm() {
 
+    const [changesLoading, setChangesLoading] = useState<boolean>();
     const [hideButton, setHideButton] = useState<boolean>()
     const { user, updateUserData } = useAuth();
+    const navigation = useNavigation<propsNavigationStack>();
 
     const { control, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(schema)
@@ -34,12 +38,16 @@ export function UserDataForm() {
 
     async function handleProfileUpdate({ name }) {
         try {
+            setChangesLoading(true)
             await updateUserData(name)
-            Alert.alert('', 'Perfil atualizado!')
+            navigation.navigate('ChangesCompleted')
         } catch (error) {
             Alert.alert('', 'Não foi possível atualizar o perfil')
             console.log(error)
+        } finally{
+            setChangesLoading(false)
         }
+        
 
     }
 
@@ -64,7 +72,7 @@ export function UserDataForm() {
                     editable={false}
                 />
             </ScrollView>
-            {!hideButton && <DefaultButton title='Salvar alterações' onPress={handleSubmit(handleProfileUpdate)} />}
+            {!hideButton && <DefaultButton title='Salvar alterações' onPress={handleSubmit(handleProfileUpdate)} loading={changesLoading} />}
         </Container>
     );
 }

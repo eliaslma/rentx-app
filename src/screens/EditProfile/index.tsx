@@ -51,14 +51,14 @@ export function EditProfile({ navigation }) {
         })
 
         if (!result.canceled) {
-            updateUserData('', result.assets[0].uri)
+            updateUserData(undefined, result.assets[0].uri)
             setImage(result.assets[0].uri);
         }
 
     }
 
     return (
-        <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
             <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
                 <Container>
                     <Header style={isIphoneX() && { paddingTop: getStatusBarHeight() + 30 }}>
@@ -86,10 +86,9 @@ export function EditProfile({ navigation }) {
                         </Menu>
                     </UserInfo>
                     <UserData>
-                        {changeDataSelected ?
-                            <UserDataForm/>
-                            :
-                            <ChangePasswordForm />
+                        {changeDataSelected
+                            ? <UserDataForm />
+                            : <ChangePasswordForm />
                         }
                     </UserData>
                 </Container>

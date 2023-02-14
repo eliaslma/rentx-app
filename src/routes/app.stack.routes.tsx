@@ -1,4 +1,5 @@
 import React from 'react';
+import { propsNavigatorStack } from './Models';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 // Home Screens
@@ -12,6 +13,7 @@ import { SchedulingSuccess } from '@myapp/screens/SchedulingSuccess';
 import { Profile } from '@myapp/screens/Profile';
 import { EditProfile } from '@myapp/screens/EditProfile';
 import { SignOut } from '@myapp/screens/SignOut';
+import { ChangesCompleted } from '@myapp/screens/ChangesCompleted';
 
 
 export function HomeRoutes(){
@@ -31,13 +33,14 @@ export function HomeRoutes(){
 
 export function ProfileRoutes(){
 
-    const Stack = createNativeStackNavigator()
+    const Stack = createNativeStackNavigator<propsNavigatorStack>()
     
     return(
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="Home" component={Profile}/>
+            <Stack.Screen name="Profile" component={Profile}/>
             <Stack.Screen name="EditProfile" component={EditProfile}/>
             <Stack.Screen name="SignOut" component={SignOut}/>
+            <Stack.Screen name="ChangesCompleted" component={ChangesCompleted}/>
         </Stack.Navigator>
     );
 }

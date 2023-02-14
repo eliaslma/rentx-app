@@ -1,11 +1,13 @@
 import React from 'react';
-import { FlatList, Platform, Alert } from 'react-native';
+import { FlatList, Alert } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useState, useEffect } from 'react';
 import { useTheme } from 'styled-components';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { useNetInfo } from '@react-native-community/netinfo';
 import { getBottomSpace, getStatusBarHeight, isIphoneX } from 'react-native-iphone-x-helper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { api } from '@myapp/services/api';
 import Logo from '../../assets/logo.svg'
@@ -13,6 +15,7 @@ import { CarDTO } from '@myapp/dtos/CarDTO';
 import { getSpecIcon } from '@myapp/utils/getSpecIcon';
 import { Loader } from '@myapp/components/Loader';
 import { CardCar } from '@myapp/components/CardCar';
+import { useAuth } from '@myapp/hooks/auth';
 
 import {
     Container,
@@ -21,27 +24,60 @@ import {
     TotalCars,
 } from './styles';
 
-
 export function Home({navigation}){
 
+    const theme = useTheme()
+    const netInfo = useNetInfo()
+    const { user } = useAuth();
     const [carList,setCarList] = useState<CarDTO[]>([])
     const [isLoading, setLoading] = useState<boolean>()
+    const carsStorageKey = '@rentx:cars';
     
-    const theme = useTheme()
 
-    async function getCarList(){
+    async function getCarList(isConnected: boolean){
 
         setLoading(true)
 
-        await api.get('/cars')
-        .then((response) => {
-            setCarList(response.data)
-            setLoading(false)})
-        .catch((error) => {
-            Alert.alert('Sem conexão', 'O aparalho está desconectado da internet',[
-                {text: 'OK', onPress: () => getCarList()}
-            ])
-            console.log(error)
+        if(isConnected){
+            await api.get('/cars')
+            .then((response) => {
+                setCarList(response.data)
+                setCarsLocalStorage(response.data)
+                setLoading(false) })
+            .catch((error) => {
+                Alert.alert('Sem conexão', 'O aparalho está desconectado da internet',[
+                    {text: 'OK', onPress: () => getCarList(false)}
+                ])
+                console.log(error)
+            })
+        }else{
+            const carList = await AsyncStorage.getItem(carsStorageKey)
+            if (carList) {
+                setLoading(false)
+                const carListDataFormatted = JSON.parse(carList) as CarDTO[]
+                setCarList(carListDataFormatted)
+            }
+        }
+    }
+
+    async function setCarsLocalStorage(carList: CarDTO){
+        try {
+            await AsyncStorage.setItem(carsStorageKey, JSON.stringify(carList))
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    async function offlineSynchronize(){
+        await api.post('/users/sync', {
+            created: [],
+			deleted: [],
+			updated: [{
+				user_id: user.id,
+   				name: user.name,
+   				driver_license: user.driver_license,
+   				avatar: user.avatar
+			}]
         })
     }
 
@@ -50,9 +86,15 @@ export function Home({navigation}){
     }
 
     useEffect(() => {
-        getCarList()
-    },[])
-    
+        if(netInfo.isConnected){
+            offlineSynchronize()
+            getCarList(netInfo.isConnected)
+        }else{
+            getCarList(false)
+        }
+        
+    },[netInfo.isConnected])
+
     return (
         <Container>
             <StatusBar style="light" translucent={false} backgroundColor={theme.colors.header}/>

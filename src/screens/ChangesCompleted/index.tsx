@@ -2,6 +2,7 @@ import React from 'react';
 import Done from '../../assets/done.svg'
 import { StatusBar } from 'expo-status-bar';
 import { useTheme } from 'styled-components';
+import { useNavigation } from '@react-navigation/native';
 import IconX from '../../assets/logo_background_gray.svg'
 import { RFValue } from 'react-native-responsive-fontsize';
 import { getStatusBarHeight, isIphoneX } from 'react-native-iphone-x-helper';
@@ -17,8 +18,10 @@ import {
     Footer
 } from './styles';
 
+
 export function ChangesCompleted(){
 
+    const navigation = useNavigation();
     const theme = useTheme();
 
     return(
@@ -36,7 +39,7 @@ export function ChangesCompleted(){
                 </Message>
             </Content>
             <Footer>
-                <ConfirmButton onPress={() => {}}>
+                <ConfirmButton onPress={() => navigation.goBack()}>
                     <ButtonTitle>Ok</ButtonTitle>
                 </ConfirmButton>
             </Footer>
