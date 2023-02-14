@@ -1,4 +1,4 @@
-import { 
+import {
     useContext,
     createContext,
     useState,
@@ -10,7 +10,7 @@ import { api } from "@myapp/services/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert } from "react-native";
 
-interface userData{
+interface userData {
     avatar: string,
     driver_license?: string,
     email: string,
@@ -18,44 +18,45 @@ interface userData{
     name: string,
 }
 
-interface authState{
+interface authState {
     token: string;
     user: userData;
 }
 
-interface SignCredentials{
+interface SignCredentials {
     email: string;
     password: string;
 }
 
-interface AuthContextProps{
-    user: userData
-    signIn: (credentials: SignCredentials) => Promise<void>
+interface AuthContextProps {
+    user: userData;
+    signIn: (credentials: SignCredentials) => Promise<void>;
     signOut(): Promise<void>;
+    updateUserData: (name?: string, avatar?: string) => Promise<void>;
     userStorageLoading: boolean;
 }
 
-interface AuthProviderProps{
+interface AuthProviderProps {
     children: ReactNode
 }
 
 const AuthContext = createContext<AuthContextProps>({} as AuthContextProps)
 
 
-function AuthProvider({children} : AuthProviderProps){
+function AuthProvider({ children }: AuthProviderProps) {
 
-    const [userStorageLoading,setUserStorageLoading] = useState(true);
+    const [userStorageLoading, setUserStorageLoading] = useState(true);
     const [userAuthState, setUserAuthState] = useState<authState>({} as authState)
     const userStorageKey = '@rentx:user';
 
-    async function signIn(userCredential: SignCredentials){
+    async function signIn(userCredential: SignCredentials) {
 
         await api.post('/sessions', {
             email: userCredential.email,
             password: userCredential.password
         }).then((response) => {
             const { user, token } = response.data;
-            const userAuthenticad : authState = {
+            const userAuthenticad: authState = {
                 token: token,
                 user: user
             }
@@ -69,58 +70,79 @@ function AuthProvider({children} : AuthProviderProps){
     }
 
     // persiste dados do usuário autenticado
-    async function setLocalStorageAuthenticatedUserData(userAuthenticad: authState){
+    async function setLocalStorageAuthenticatedUserData(userAuthenticad: authState) {
 
         try {
-            await AsyncStorage.setItem(userStorageKey,JSON.stringify(userAuthenticad))
-        }catch(e){
+            await AsyncStorage.setItem(userStorageKey, JSON.stringify(userAuthenticad))
+        } catch (e) {
             console.log(e)
         }
 
     }
 
-    async function getAuthenticatedUserData(){
+    async function getAuthenticatedUserData() {
 
-            const userData = await AsyncStorage.getItem(userStorageKey) 
-            if(userData){
-                const userDataFormatted = JSON.parse(userData) as authState
-                api.defaults.headers.authorization = `Bearer ${userDataFormatted.token}`;
-                setUserAuthState(userDataFormatted)
-            }
-            setUserStorageLoading(false)
+        const userData = await AsyncStorage.getItem(userStorageKey)
+        if (userData) {
+            const userDataFormatted = JSON.parse(userData) as authState
+            api.defaults.headers.authorization = `Bearer ${userDataFormatted.token}`;
+            setUserAuthState(userDataFormatted)
+        }
+        setUserStorageLoading(false)
     }
 
-    async function signOut(){
-        try{
+    async function updateUserData(name: string, avatar: string) {
+
+        try {
+            const userAuthenticad: authState = {
+                token: userAuthState.token,
+                user: {
+                    avatar: avatar ? avatar : userAuthState.user.avatar,
+                    driver_license: userAuthState.user.driver_license,
+                    email: userAuthState.user.email,
+                    id: userAuthState.user.id,
+                    name: name ? name : userAuthState.user.name,
+                }
+            }
+            setUserAuthState(userAuthenticad)
+            await AsyncStorage.setItem(userStorageKey, JSON.stringify(userAuthenticad))
+
+        } catch (error) {
+            throw new Error(error)
+        }
+
+    }
+
+    async function signOut() {
+        try {
             setUserAuthState({} as authState)
             await AsyncStorage.removeItem(userStorageKey)
-        }catch(e){
+        } catch (e) {
             console.log(e)
-            Alert.alert('','Não foi possível deslogar')
+            Alert.alert('', 'Não foi possível deslogar')
         }
     }
 
     useEffect(() => {
-        getAuthenticatedUserData(); 
-    },[])
+        getAuthenticatedUserData();
+    }, [])
 
-    return(
+    return (
         <AuthContext.Provider value={{
             user: userAuthState.user,
             signIn,
             signOut,
+            updateUserData,
             userStorageLoading
         }}>
             {children}
         </AuthContext.Provider>
-
-
     );
 }
 
-function useAuth(){
+function useAuth() {
     const context = useContext(AuthContext)
     return context;
 }
 
-export {AuthProvider, useAuth}
+export { AuthProvider, useAuth }
