@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Alert } from 'react-native';
 import { Feather } from '@expo/vector-icons'
 import { useTheme } from 'styled-components';
@@ -7,6 +7,7 @@ import { useRoute } from '@react-navigation/native';
 import { getSpecIcon } from '@myapp/utils/getSpecIcon';
 import differenceInDays from 'date-fns/differenceInDays';
 import { isIphoneX, getStatusBarHeight, getBottomSpace } from 'react-native-iphone-x-helper';
+import { useNetInfo } from '@react-native-community/netinfo';
 
 import { api } from '@myapp/services/api';
 import { CarDTO } from '@myapp/dtos/CarDTO';
@@ -46,6 +47,8 @@ import {
 
 } from './styles';
 
+import FlashMessage from 'react-native-flash-message';
+
 interface Params {
     car: CarDTO;
     rentalPeriod: {
@@ -59,8 +62,12 @@ interface Params {
 
 export function SchedulingDetails({ navigation }) {
 
+    const myLocalFlashMessage = useRef(null);
+
     const theme = useTheme();
     const route = useRoute();
+    const [carUpdated, setCarUpdated] = useState<CarDTO>({} as CarDTO)
+    const netInfo = useNetInfo();
     const [isLoading, setLoading] = useState<boolean>()
     const { car, rentalPeriod, markedDates } = route.params as Params
 
@@ -69,7 +76,7 @@ export function SchedulingDetails({ navigation }) {
         rentalPeriod.startDate,
     )
 
-    const totalPrice = diaries * car.price
+    const totalPrice = diaries * carUpdated.price
 
     async function handleConfirmScheduling() {
 
@@ -106,10 +113,42 @@ export function SchedulingDetails({ navigation }) {
 
     }
 
+    useEffect(() => {
+
+        async function fetchUpdatedCar(){
+            await api.get(`/cars/${car.id}`).then((response) => {
+                myLocalFlashMessage.current.hideMessage()
+                setCarUpdated(response.data)
+            }).catch((error) => {
+                setCarUpdated({} as CarDTO)
+                myLocalFlashMessage.current.showMessage({
+                message: "Serviço indisponível",
+                description: "Não foi possível atualizar os dados do veículo",
+                type: "danger",
+                animationDuration: 450,
+                style: { backgroundColor: theme.colors.main }})
+                console.log('Erro ao capturar dados atualizado sobre o carro',error)
+            })
+        }
+
+        if(netInfo.isConnected === true){
+            fetchUpdatedCar()
+        }else{
+                myLocalFlashMessage.current.showMessage({
+                message: "Conecte-se para prosseguir com o agendamento..",
+                type: "danger",
+                animationDuration: 450,
+                style: { backgroundColor: theme.colors.main }})
+        }
+        
+
+    },[netInfo.isConnected])
+    
     return (
 
         <Container>
-            <StatusBar style='dark' translucent={false} backgroundColor={'white'} />
+            <FlashMessage position="top" autoHide={false} ref={myLocalFlashMessage}/>
+            <StatusBar style={'dark'} translucent={false} backgroundColor={netInfo.isConnected && carUpdated.id ? theme.colors.background_secondary : theme.colors.main} />
             <Header style={isIphoneX() && { paddingTop: getStatusBarHeight() }}>
                 <HeaderContent>
                     <BackButton onPress={() => navigation.goBack()} />
@@ -124,7 +163,7 @@ export function SchedulingDetails({ navigation }) {
                     </Model>
                     <Rent>
                         <Period>{car.period}</Period>
-                        <Price>R$ {car.price}</Price>
+                        <Price>{netInfo.isConnected === true && carUpdated.id ? `R$ ${carUpdated.price}` : '...'}</Price>
                     </Rent>
                 </Description>
                 <ModelSpec>
@@ -157,11 +196,11 @@ export function SchedulingDetails({ navigation }) {
                         <TotalDaily>
                             <PriceTitle>TOTAL</PriceTitle>
                             <PriceInfo>
-                                <DailyPrice>R$ {car.price}</DailyPrice>
+                                <DailyPrice>{netInfo.isConnected === true && carUpdated.id ? `R$ ${carUpdated.price}` : '...'}</DailyPrice>
                                 <Days> x{diaries} { diaries == 1 ? 'diária' : 'diárias'}</Days>
                             </PriceInfo>
                         </TotalDaily>
-                        <TotalPrice>R$ {totalPrice}</TotalPrice>
+                        <TotalPrice>{netInfo.isConnected === true && carUpdated.id ? `R$ ${totalPrice}` : '...'}</TotalPrice>
                     </Daily>
                 </Details>
             </Content>
@@ -170,7 +209,7 @@ export function SchedulingDetails({ navigation }) {
                     title="Alugar agora"
                     color={theme.colors.success}
                     onPress={handleConfirmScheduling}
-                    enabled={!isLoading}
+                    enabled={!isLoading && netInfo.isConnected === true && !!carUpdated.id}
                     loading={isLoading}
                 />
             </Footer>

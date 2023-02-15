@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { useFocusEffect } from '@react-navigation/native';
 import { TouchableWithoutFeedback, KeyboardAvoidingView, Platform, Keyboard } from 'react-native';
 import { getStatusBarHeight, isIphoneX } from 'react-native-iphone-x-helper';
 import { StatusBar } from 'expo-status-bar';
 import { useTheme } from 'styled-components';
 import * as ImagePicker from 'expo-image-picker';
+import { useNetInfo } from '@react-native-community/netinfo';
+import { api } from '@myapp/services/api';
 
 import { UserDataForm } from '@myapp/components/UserDataForm';
 import Camera from '../../assets/camera.svg'
@@ -31,6 +34,7 @@ import {
 export function EditProfile({ navigation }) {
 
     const theme = useTheme()
+    const netInfo = useNetInfo()
     const { user, updateUserData } = useAuth();
     const [changeDataSelected, setChangeDataSelected] = useState<boolean>(true)
     const [image, setImage] = useState(user.avatar);
@@ -57,6 +61,31 @@ export function EditProfile({ navigation }) {
         }
 
     }
+
+    async function offlineSynchronize() {
+        try {
+            await api.post('/users/sync', {
+                created: [],
+                deleted: [],
+                updated: [{
+                    user_id: user.id,
+                    name: user.name,
+                    driver_license: user.driver_license,
+                    avatar: user.avatar
+                }]
+            })
+        } catch (error) {
+            console.log('Erro na sincronização de usuário', error)
+        }
+    }
+
+    useFocusEffect(
+        useCallback(() => {
+            if (netInfo.isConnected === true) {
+                offlineSynchronize()
+            }
+        }, [netInfo.isConnected])
+    );
 
     return (
         <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
