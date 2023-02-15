@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { TouchableWithoutFeedback, KeyboardAvoidingView, Platform, Keyboard } from 'react-native';
 import { getStatusBarHeight, isIphoneX } from 'react-native-iphone-x-helper';
+import { StatusBar } from 'expo-status-bar';
 import { useTheme } from 'styled-components';
 import * as ImagePicker from 'expo-image-picker';
 
@@ -61,6 +62,7 @@ export function EditProfile({ navigation }) {
         <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
             <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
                 <Container>
+                    <StatusBar style={'light'} translucent={false} backgroundColor={theme.colors.header} />
                     <Header style={isIphoneX() && { paddingTop: getStatusBarHeight() + 30 }}>
                         <ProfileOptions>
                             <BackButton onPress={() => navigation.goBack()}>

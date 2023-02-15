@@ -1,6 +1,8 @@
 import React from 'react';
 import { getStatusBarHeight, isIphoneX } from 'react-native-iphone-x-helper';
 import { useAuth } from '@myapp/hooks/auth';
+import { useTheme } from 'styled-components';
+import { StatusBar } from 'expo-status-bar';
 
 import {
     Container,
@@ -17,9 +19,11 @@ import {
 export function Profile({ navigation }) {
 
     const { user } = useAuth()
+    const theme = useTheme()
 
     return (
         <Container>
+            <StatusBar style={'light'} translucent={false} backgroundColor={theme.colors.header} />
             <Header style={isIphoneX() && { paddingTop: getStatusBarHeight() + 30 }}>
                 <ProfileOptions>
                     <IconWrapper onPress={() =>  navigation.navigate('EditProfile')}>

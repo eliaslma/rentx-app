@@ -1,7 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { useRoute } from '@react-navigation/native';
 import { isIphoneX, getStatusBarHeight, getBottomSpace } from 'react-native-iphone-x-helper';
+import { showMessage, hideMessage } from "react-native-flash-message";
+import FlashMessage from "react-native-flash-message";
+import { useNetInfo } from '@react-native-community/netinfo';
+import { api } from '@myapp/services/api';
+import { useTheme } from 'styled-components';
 
 import { getSpecIcon } from '@myapp/utils/getSpecIcon';
 import { CarDTO } from '@myapp/dtos/CarDTO';
@@ -25,7 +30,6 @@ import {
     ModelSpec,
     AboutCar,
     Footer
-
 } from './styles';
 
 
@@ -34,17 +38,40 @@ export interface Params {
 }
 
 export function CarDetails({ navigation }) {
-
     const route = useRoute();
     const { car } = route.params as Params
+    const [carUpdated, setCarUpdated] = useState<CarDTO>({} as CarDTO)
+    const netInfo = useNetInfo()
+    const theme = useTheme();
 
     function handleScheduling() {
-        navigation.navigate('Scheduling', {car})
+        navigation.navigate('Scheduling', {car: carUpdated})
     }
+
+    useEffect(() => {
+        async function fetchUpdatedCar(){
+            const response = await api.get(`/cars/${car.id}`)
+            setCarUpdated(response.data)
+        }
+
+        if(netInfo.isConnected === true){
+            hideMessage()
+            fetchUpdatedCar()
+        }else{
+            showMessage({
+                message: "Conecte-se para prosseguir com o agendamento..",
+                type: "danger",
+                animationDuration: 450,
+                style: { backgroundColor: theme.colors.main}
+              });
+        }
+
+    },[netInfo.isConnected])
 
     return (
         <Container>
-            <StatusBar style={'dark'} translucent={false} backgroundColor={'white'} />
+            <FlashMessage position="top" autoHide={false} />
+            <StatusBar style={'dark'} translucent={false} backgroundColor={netInfo.isConnected ? theme.colors.background_secondary : theme.colors.main} />
             <Header style={isIphoneX() && { paddingTop: getStatusBarHeight() }}>
                 <HeaderContent>
                     <BackButton onPress={() => navigation.goBack()} />
@@ -59,20 +86,20 @@ export function CarDetails({ navigation }) {
                     </Model>
                     <Rent>
                         <Period>{car.period}</Period>
-                        <Price>R$ {car.price}</Price>
+                        <Price>{netInfo.isConnected === true && carUpdated.id ? `R$ ${carUpdated.price}` : '...'}</Price>
                     </Rent>
                 </Description>
                 <ModelSpec>
                     {
                         car.accessories.map(spec => (
-                        <CarSpec icon={getSpecIcon(spec.type)} name={spec.name} key={spec.name} />
+                            <CarSpec icon={getSpecIcon(spec.type)} name={spec.name} key={spec.name} />
                         ))
                     }
                 </ModelSpec>
                 <AboutCar>{car.about}</AboutCar>
             </Content>
             <Footer style={isIphoneX() && { paddingBottom: getBottomSpace() }}>
-                <DefaultButton title="Escolher período do aluguel" onPress={handleScheduling} />
+                <DefaultButton title="Escolher período do aluguel" onPress={handleScheduling} enabled={netInfo.isConnected === true} />
             </Footer>
         </Container>
     );
