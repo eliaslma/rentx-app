@@ -1,12 +1,12 @@
 import React, { useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
-import { StyleSheet, FlatList } from 'react-native';
+import { StyleSheet, FlatList, Platform } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import FlashMessage, { showMessage, hideMessage } from "react-native-flash-message";
 import { useTheme } from 'styled-components';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { useNetInfo } from '@react-native-community/netinfo';
-import { getBottomSpace, getStatusBarHeight, isIphoneX } from 'react-native-iphone-x-helper';
+import { getStatusBarHeight, isIphoneX } from 'react-native-iphone-x-helper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { api } from '@myapp/services/api';
@@ -85,7 +85,7 @@ export function Home({ navigation }) {
         useCallback(() => {
             if (netInfo.isConnected === true) {
                 getCarList(netInfo.isConnected)
-            } else if ((netInfo.isConnected === false)) {
+            } else if (netInfo.isConnected === false) {
                 showMessageError("Você está offline", "Conecte-se para prosseguir com o agendamento..");
                 getCarList(false)
             }
@@ -112,7 +112,7 @@ export function Home({ navigation }) {
                     )}
                 />
             }
-            <FlashMessage position="bottom" autoHide={false} floating={true} />
+            <FlashMessage position={Platform.OS === 'ios' ? 'top' : 'bottom'} autoHide={false} />
         </Container>
     );
 }
@@ -124,6 +124,6 @@ const styles = StyleSheet.create({
         paddingTop: 16,
     },
     contentList: {
-        paddingBottom: getBottomSpace()
+        paddingBottom: 16
     },
 })

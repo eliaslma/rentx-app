@@ -10,20 +10,14 @@ export const Container = styled(GestureHandlerRootView)`
 
 export const Header = styled.View`
     background-color: ${({ theme }) => theme.colors.header};
-    width: 100%;
-`;
-
-export const HeaderContent = styled.View`
-    align-items: flex-start;
     flex-direction: column;
-    padding: 30px 24px;
+    padding: 20px 24px;
 `;
 
 export const Title = styled.Text`
     font-family: ${({ theme }) => theme.fonts.archivo_semibold};
     color: ${({ theme }) => theme.colors.background_secondary};
     font-size: ${RFValue(30)}px;
-    margin-top: 40px;
 `;
 
 export const Subtitle = styled.Text`

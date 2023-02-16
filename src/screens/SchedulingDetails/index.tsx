@@ -8,6 +8,8 @@ import { getSpecIcon } from '@myapp/utils/getSpecIcon';
 import differenceInDays from 'date-fns/differenceInDays';
 import { isIphoneX, getStatusBarHeight, getBottomSpace } from 'react-native-iphone-x-helper';
 import { useNetInfo } from '@react-native-community/netinfo';
+import { useAuth } from '@myapp/hooks/auth';
+import { getPlatformDate } from '@myapp/utils/getPlatformDate';
 
 import { api } from '@myapp/services/api';
 import { CarDTO } from '@myapp/dtos/CarDTO';
@@ -35,7 +37,7 @@ import {
     DateInfo,
     DateTitle,
     DateValue,
-    Date,
+    TotalPeriod,
     Daily,
     TotalDaily,
     PriceTitle,
@@ -69,6 +71,7 @@ export function SchedulingDetails({ navigation }) {
     const [carUpdated, setCarUpdated] = useState<CarDTO>({} as CarDTO)
     const netInfo = useNetInfo();
     const [isLoading, setLoading] = useState<boolean>()
+    const { user } = useAuth();
     const { car, rentalPeriod, markedDates } = route.params as Params
 
     const diaries = differenceInDays(
@@ -80,50 +83,35 @@ export function SchedulingDetails({ navigation }) {
 
     async function handleConfirmScheduling() {
 
-        try {
             setLoading(true)
-            const schedulesByCar = await api.get(`/schedules_bycars/${car.id}`)
 
-            const unavailable_dates = [
-                ...schedulesByCar.data.unavailable_dates,
-                ...markedDates
-            ]
-
-            api.put(`/schedules_bycars/${car.id}`, {
-                id: car.id,
-                unavailable_dates
+            api.post('rentals', {
+                user_id: user.id,
+                car_id: carUpdated.id,
+                start_date: getPlatformDate(new Date(rentalPeriod.startDate)),
+                end_date: getPlatformDate(new Date(rentalPeriod.endDate)),
+                total: totalPrice
             })
             .then(() => {
-                api.post(`schedules_byuser`, {
-                    user_id: 1,
-                    car: car,
-                    startDate: rentalPeriod.startDateFormatted,
-                    endDate: rentalPeriod.endDateFormatted,
-                })
-                .then(() => navigation.navigate('SchedulingSuccess'))
-                .catch(() => Alert.alert('Sem conexão', 'Não foi possível confirmar o agendamento'))
-                .finally(() => setLoading(false))
+                navigation.navigate('SchedulingSuccess')
             })
-            .catch(() => Alert.alert('Sem conexão', 'Não foi possível confirmar o agendamento'))
-        } catch (error) {
-            setLoading(false)
-            Alert.alert('Sem conexão', 'Não foi possível confirmar o agendamento')
-            console.log(error)
-        }
-
+            .catch(() => {
+                Alert.alert('Sem conexão', 'Não foi possível confirmar o agendamento')
+                setLoading(false)
+            })
     }
 
     useEffect(() => {
 
         async function fetchUpdatedCar(){
-            await api.get(`/cars/${car.id}`).then((response) => {
+            api.get(`/cars/${car.id}`)
+            .then((response) => {
                 myLocalFlashMessage.current.hideMessage()
                 setCarUpdated(response.data)
             }).catch((error) => {
                 setCarUpdated({} as CarDTO)
                 myLocalFlashMessage.current.showMessage({
                 message: "Serviço indisponível",
-                description: "Não foi possível atualizar os dados do veículo",
                 type: "danger",
                 animationDuration: 450,
                 style: { backgroundColor: theme.colors.main }})
@@ -148,7 +136,7 @@ export function SchedulingDetails({ navigation }) {
 
         <Container>
             <FlashMessage position="top" autoHide={false} ref={myLocalFlashMessage}/>
-            <StatusBar style={'dark'} translucent={false} backgroundColor={netInfo.isConnected && carUpdated.id ? theme.colors.background_secondary : theme.colors.main} />
+            <StatusBar style={'auto'} translucent={false} backgroundColor={netInfo.isConnected && carUpdated.id ? theme.colors.background_secondary : theme.colors.main} />
             <Header style={isIphoneX() && { paddingTop: getStatusBarHeight() }}>
                 <HeaderContent>
                     <BackButton onPress={() => navigation.goBack()} />
@@ -174,7 +162,7 @@ export function SchedulingDetails({ navigation }) {
                     }
                 </ModelSpec>
                 <Details>
-                    <Date>
+                    <TotalPeriod>
                         <Icon>
                             <Calendar />
                         </Icon>
@@ -191,7 +179,7 @@ export function SchedulingDetails({ navigation }) {
                             <DateTitle>ATÉ</DateTitle>
                             <DateValue>{rentalPeriod.endDateFormatted}</DateValue>
                         </DateInfo>
-                    </Date>
+                    </TotalPeriod>
                     <Daily>
                         <TotalDaily>
                             <PriceTitle>TOTAL</PriceTitle>

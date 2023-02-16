@@ -109,7 +109,7 @@ export const DateValue = styled.Text`
     font-size: ${RFValue(15)}px;
 `;
 
-export const Date = styled.View`
+export const TotalPeriod = styled.View`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;

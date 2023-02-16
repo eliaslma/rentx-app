@@ -2,6 +2,11 @@ import React from 'react';
 import { useTheme } from 'styled-components';
 import { RFValue } from 'react-native-responsive-fontsize';
 
+
+import { format, parseISO } from 'date-fns';
+
+
+
 import { PeriodCard } from '../PeriodCard';
 import { CarDTO } from '@myapp/dtos/CarDTO';
 import { SvgProps } from 'react-native-svg';
@@ -28,8 +33,10 @@ export interface CardProps {
 }
 
 export function ScheduleCard({data, icon: Icon, startDate, endDate, ...rest} : CardProps){
-
-    const theme = useTheme();
+    
+    const theme = useTheme()
+    const startDateFormatted = format(parseISO(startDate),'dd/MM/yyyy')
+    const endDateFormatted = format(parseISO(endDate),'dd/MM/yyyy')
 
     return (
         <>
@@ -42,8 +49,8 @@ export function ScheduleCard({data, icon: Icon, startDate, endDate, ...rest} : C
                         </Model>
                         <About>
                             <Rent>
-                                <Period>{data.rent.period}</Period>
-                                <Price>R$ {data.rent.price}</Price>
+                                <Period>{data.period}</Period>
+                                <Price>R$ {data.price}</Price>
                             </Rent>
                             <Type>
                                 <Icon fill={theme.colors.text_detail} width={RFValue(20)} height={RFValue(20)}/>
@@ -53,7 +60,7 @@ export function ScheduleCard({data, icon: Icon, startDate, endDate, ...rest} : C
                     <CarImage source={{uri: data.thumbnail}} resizeMode="contain"/>
                 </CarInfo>
             </Container>
-            <PeriodCard startDate={startDate} endDate={endDate}/>
+            <PeriodCard startDate={startDateFormatted} endDate={endDateFormatted}/>
         </>
 
    );

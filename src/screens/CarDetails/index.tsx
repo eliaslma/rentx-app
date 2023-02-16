@@ -49,10 +49,13 @@ export function CarDetails({ navigation }) {
 
     useFocusEffect(
         useCallback(() => {
+
             async function fetchUpdatedCar(){
-                await api.get(`/cars/${car.id}`).then((response) => {
+                api.get(`/cars/${car.id}`)
+                .then((response) => {
                     setCarUpdated(response.data)
                 }).catch((error) => {
+                    setCarUpdated({} as CarDTO)
                     console.log('Erro ao capturar dados atualizado sobre o carro',error)
                 })
             }
@@ -65,7 +68,7 @@ export function CarDetails({ navigation }) {
    
     return (
         <Container>
-            <StatusBar style={'dark'} translucent={false} backgroundColor={netInfo.isConnected && carUpdated.id ? theme.colors.background_secondary : theme.colors.main} />
+            <StatusBar style='auto' translucent={false} backgroundColor={netInfo.isConnected && carUpdated.id ? theme.colors.background_secondary : theme.colors.main}/>
             <Header style={isIphoneX() && { paddingTop: getStatusBarHeight() }}>
                 <HeaderContent>
                     <BackButton onPress={() => navigation.goBack()} />
