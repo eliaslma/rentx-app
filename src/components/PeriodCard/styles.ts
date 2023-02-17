@@ -8,23 +8,20 @@ export const Container = styled.View`
     width: 100%;
     padding: 11px 24px;
     margin-bottom: 16px;
-    background-color: ${({ theme }) => theme.colors.background_secondary};
+    background-color: ${({ theme }) => theme.colors.background_primary};
 `;
 
 
 export const Title = styled.Text`
-
     font-family: ${({ theme }) => theme.fonts.archivo_medium};
     color: ${({ theme }) => theme.colors.text_detail};
     font-size: ${RFValue(10)}px;
     text-transform: uppercase;
-
 `;
 
 export const PeriodWrapper = styled.View`
     flex-direction: row;
     align-items: center;
-
 `;
 
 export const StartDate = styled.Text`

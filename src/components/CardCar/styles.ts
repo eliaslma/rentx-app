@@ -3,7 +3,7 @@ import { RFValue } from 'react-native-responsive-fontsize';
 import styled from 'styled-components/native';
 
 export const Container = styled(RectButton)`
-    background-color: ${({ theme }) => theme.colors.background_secondary};
+    background-color: ${({ theme }) => theme.colors.background_primary};
     padding: 17px 24px;
     margin-bottom: 16px;
 `;

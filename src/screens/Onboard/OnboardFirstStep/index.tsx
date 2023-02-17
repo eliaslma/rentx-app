@@ -7,7 +7,7 @@ import { MotiView } from 'moti';
 
 import { StepIndex } from '@myapp/screens/SignUp/FirstStep/styles';
 import NumberOne from '../../../assets/numberone.svg'
-import Calendar from '../../../assets/calendar.svg'
+import Car from '../../../assets/car.svg'
 import {
     Container,
     Header,
@@ -36,19 +36,19 @@ export function OnboardFirstStep({ navigation }) {
                 <StatusBar translucent={false} style={"dark"} backgroundColor={theme.colors.background_primary} />
                 <Header style={isIphoneX() && { paddingTop: getStatusBarHeight() + RFValue(130) }}>
                     <StepWrapper>
-                        <Calendar width={RFValue(80)} height={RFValue(80)} fill={theme.colors.main} />
+                        <Car width={RFValue(80)} height={RFValue(80)} fill={theme.colors.main} />
                         <NumberOne width={RFValue(64)} height={RFValue(42)} />
                     </StepWrapper>
                 </Header>
                 <Title>
                     Primeiro, {'\n'}
-                    escolha a {'\n'}
-                    data
+                    escolha o {'\n'}
+                    carro
                 </Title>
                 <Subtitle>
-                    Você é quem define um {'\n'}
-                    período, e nós mostraremos {'\n'}
-                    os carros disponíveis.
+                    Vários modelos para você {'\n'}
+                    dirigir seguro, com conforto {'\n'}
+                    e segurança.
                 </Subtitle>
                 <Footer style={isIphoneX() && { paddingBottom: getBottomSpace() }}>
                     <StepSliderWrapper>

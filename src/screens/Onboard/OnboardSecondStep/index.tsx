@@ -6,7 +6,7 @@ import { useTheme } from 'styled-components';
 
 import { StepIndex } from '@myapp/screens/SignUp/FirstStep/styles';
 import NumberTwo from '../../../assets/numbertwo.svg'
-import Car from '../../../assets/car.svg'
+import Calendar from '../../../assets/calendar.svg'
 import {
     Container,
     Header,
@@ -29,19 +29,19 @@ export function OnboardSecondStep({ navigation }) {
             <StatusBar translucent={false} style={"dark"} backgroundColor={theme.colors.background_primary} />
             <Header style={isIphoneX() && { paddingTop: getStatusBarHeight() + RFValue(130) }}>
                 <StepWrapper>
-                    <Car width={RFValue(80)} height={RFValue(80)} fill={theme.colors.main} />
+                    <Calendar width={RFValue(80)} height={RFValue(80)} fill={theme.colors.main} />
                     <NumberTwo width={RFValue(64)} height={RFValue(42)} />
                 </StepWrapper>
             </Header>
             <Title>
                 Depois, {'\n'}
-                escolha o {'\n'}
-                carro
+                escolha a {'\n'}
+                data
             </Title>
             <Subtitle>
-                Vários modelos para você {'\n'}
-                dirigir seguro, com conforto {'\n'}
-                e segurança.
+                Você é quem define um {'\n'}
+                período, e nós confirmaremos {'\n'}
+                seu agendamento.
             </Subtitle>
             <Footer style={isIphoneX() && { paddingBottom: getBottomSpace() }}>
                 <StepSliderWrapper>

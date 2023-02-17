@@ -45,7 +45,7 @@ export const Icon = styled(MaterialIcons)`
 export const UserInfo = styled.View`
     width: 100%;
     align-items: center;
-    margin-top: ${RFValue(200) - 110}px;
+    margin-top: ${RFValue(110)}px;
     padding: 0px 24px;
 `;
 
